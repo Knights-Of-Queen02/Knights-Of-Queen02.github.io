@@ -559,11 +559,15 @@
             }
 
             closeButtonFloat.addEventListener('click', closeModal);
+            
+            // 🚫 ลบ Event Listener ที่ทำให้คลิกพื้นหลังปิด Modal ได้
+            /*
             imageModal.addEventListener('click', function(e) {
                 if (e.target === imageModal) {
                     closeModal();
                 }
             });
+            */
 
             document.addEventListener('keydown', function(e) {
                 if (e.key === "Escape" && imageModal.classList.contains('active')) {
