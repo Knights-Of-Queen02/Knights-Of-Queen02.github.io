@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knights-Of-Queen02</title>
+
+    <link rel="shortcut icon" href="B6BB28C0-F7E4-4302-8CA9-158B5735C62A.gif" sizes="32x32" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ตัวแปรและรีเซ็ต --- */
+        :root {
+            --primary-color: #9397F0;
+            --dark-blue: #696dc7;    
+            --text-dark: #333;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5; 
+            --card-bg: #ffffff; 
+            --border-color: #e0e0e0;
+            --tag-bg: #eeeeee;
+            --tag-text: #616161;
+            --button-border: #cccccc;
+            --overlay-bg: rgba(0, 0, 0, 0.7); 
+            --modal-close-color: #ffffff; 
+            --footer-bg: #444444; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding-top: 50px;
+            /* ลบ transition overflow เพื่อให้การคืนค่า scroll position ทันที */
+        }
+
+        /* 💡 แก้ไข: ปรับ body.modal-open ให้รองรับการเลื่อนแบบมี offset */
+        body.modal-open {
+            overflow: hidden; 
+            position: fixed; /* ต้องใช้ fixed เพื่อไม่ให้เลื่อน */
+            width: 100%;
+        }
+        
+        /* [ถูกลบ] CSS สำหรับ body.internet-offline (ตามที่ร้องขอในรอบก่อน) */
+
+        .container {
+            max-width: 100%;
+            padding: 0;
+        }
+
+        /* --- 1. ส่วน Navigation Bar (เดิม) --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px; 
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999; 
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+            line-height: 1.2;
+        }
+
+        /* CSS สำหรับ Wavy Text Animation */
+        #typing-text {
+            display: flex; 
+            flex-wrap: nowrap;
+            overflow: visible;
+        }
+
+        .text-wave-char {
+            display: inline-block;
+            position: relative;
+            animation: wave 1.5s ease-in-out infinite; 
+            animation-delay: calc(var(--char-index) * 0.05s);
+            transform-origin: bottom; 
+            transform: translateY(0); 
+        }
+
+        @keyframes wave {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+                color: var(--primary-color);
+            }
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        /* --- 2. ส่วน Make online (เดิม) --- */
+        .make-online-section {
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            text-align: center; 
+        }
+
+        .main-logo-image {
+            width: 100px; 
+            height: auto;
+            display: block; 
+            margin: 0 auto 20px auto; 
+        }
+        
+        .make-online-section h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            color: var(--text-light); 
+            text-shadow: none;
+            letter-spacing: initial;
+        }
+
+        .make-online-section p {
+            font-size: 16px;
+            font-weight: 300;
+            margin: 0 auto 15px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .make-online-section a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* --- 3. ส่วน Card รายการ (เดิม) --- */
+        .content-section {
+            padding: 0 10px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            margin: 10px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            text-align: center; 
+        }
+
+        .tag-capsule {
+            display: inline-block;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: none;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .image-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer; 
+        }
+
+        /* 💡 Video Placeholder Base (Skeleton พื้นหลัง) */
+        .video-placeholder {
+            width: 100%;
+            padding-top: 56.25%; 
+            height: 0;
+            background-color: var(--border-color); 
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden; 
+            margin: 0 auto 20px;
+            cursor: pointer; 
+        }
+        
+        /* 💡 รูปภาพจริง (ซ่อนเมื่อ Loading) */
+        .video-placeholder img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; 
+            transition: opacity 0.5s ease; 
+        }
+        
+        /* 💡 Shimmer Effect Animation */
+        .video-placeholder.loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translateX(-100%); 
+            z-index: 10;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%); 
+            }
+        }
+
+        /* 💡 เมื่อภาพโหลดเสร็จ (JS จะเพิ่ม class 'loaded') */
+        .video-placeholder.loaded img {
+            opacity: 1; 
+        }
+        .video-placeholder.loaded::after {
+            content: none; 
+        }
+        
+        /* เมื่อออฟไลน์ จะบังคับให้แสดงสถานะ Loading */
+        body.internet-offline .video-placeholder {
+            cursor: default; 
+        }
+        body.internet-offline .video-placeholder img {
+            opacity: 0 !important; 
+        }
+        body.internet-offline .video-placeholder::after {
+            content: ""; 
+            animation: shimmer 1.5s infinite !important;
+            transform: translateX(-100%) !important;
+            z-index: 10 !important;
+        }
+
+
+        /* ปุ่ม Contact Admin (เดิม) */
+        .submit-button {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--bg-light); 
+            color: var(--primary-color); 
+            border: 1px solid var(--button-border);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none; 
+            display: inline-block;
+            transition: none;
+        }
+        
+        .submit-button:hover,
+        .submit-button:active,
+        .submit-button:visited, 
+        .submit-button:focus {
+            background-color: var(--bg-light); 
+            color: var(--primary-color);      
+            box-shadow: none; 
+            transform: none; 
+            outline: none;                    
+        }
+        
+        /* --- Modal Styles (เดิม) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; 
+            backdrop-filter: blur(0px);    
+            -webkit-backdrop-filter: blur(0px);
+            
+            transition: opacity 0.3s ease-out, 
+                        background-color 0.3s ease-out, 
+                        backdrop-filter 0.3s ease-out; 
+                        
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden; 
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            background-color: var(--overlay-bg); 
+            backdrop-filter: blur(8px);       
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .modal-content {
+            background-color: transparent; 
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 90%;
+            padding: 0; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none; 
+            
+            transform: scale(0.95); 
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .modal-body {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            padding: 0;
+            touch-action: none; 
+            user-select: none;
+        }
+
+        .modal-image {
+            max-width: 100%; 
+            max-height: 100%; 
+            width: auto;
+            height: auto;
+            display: block;
+            border-radius: 10px; 
+            cursor: default; 
+            object-fit: contain; 
+            pointer-events: none; 
+            transition: max-width 0.3s, max-height 0.3s;
+        }
+        
+        .control-buttons-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+            display: flex;
+        }
+
+        /* ปุ่ม X ที่ไม่มีวงกลม */
+        .control-button {
+            color: var(--modal-close-color); 
+            font-weight: 300;
+            cursor: pointer;
+            background-color: transparent; 
+            border-radius: 0; 
+            width: auto;      
+            height: auto;     
+            line-height: 1;   
+            padding: 5px 10px; 
+            text-align: center;
+            font-size: 28px;
+            transition: color 0.2s; 
+        }
+
+        .control-button:hover {
+            background-color: transparent; 
+            color: #ff0000; 
+        }
+
+        .close-button-float {
+            font-size: 40px; 
+            line-height: 1; 
+            width: auto;
+            height: auto;
+            padding: 5px 10px; 
+        }
+        
+        /* --- 4. ส่วน Footer (เดิม) --- */
+        .footer-section {
+            background-color: var(--footer-bg);
+            color: var(--bg-light); 
+            padding: 10px 20px; 
+            text-align: center;
+            font-size: 12px; 
+            margin-top: 30px; 
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <span id="typing-text"></span>
+            </a>
+            <span class="menu-icon">&#9776;</span>
+        </nav>
+
+        <section class="make-online-section">
+            <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
+            
+            <p>
+                Customize your UI freely. <a 
+                    href="https://t.me/K02_TH" 
+                    target="_blank" 
+                    style="color: #d8bfd8 !important; text-decoration: underline !important; display: inline !important; font-weight: 500;"
+                >
+                    Click here to contact the admin.
+                </a>
+            </p>
+        </section>
+
+        <section class="content-section">
+
+            <div class="product-card"> 
+                <div class="tag-capsule">Alert Message PopUp</div>
+                
+                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png">
+                        <img src="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png" alt="Multi Color FPS Preview"> 
+                    </div>
+                </a>
+                
+                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
+                    Contact Admin
+                </a>
+            </div>
+
+            <div class="product-card">
+                <div class="tag-capsule">Unknown</div>
+                
+                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png">
+                        <img src="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png" alt="White Color FPS Preview">
+                    </div>
+                </a>
+                
+                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
+                    Contact Admin
+                </a>
+            </div>
+
+        </section>
+    </div>
+
+    <div id="imageModal" class="modal-overlay">
+        <div class="control-buttons-container">
+            <span class="control-button close-button-float" id="closeButtonFloat">&times;</span> 
+        </div>
+
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modalImage" class="modal-image" src="" alt="">
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer-section">
+        &copy; 2024-2025 Knights Of Queen02 | All Rights Reserved
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            let scrollPosition = 0; // 💡 New: ตัวแปรสำหรับเก็บตำแหน่งการเลื่อน
+
+            // --- 1. Wavy Text Initialization Logic (เดิม) ---
+            const textElement = document.getElementById('typing-text');
+            const targetText = "Knight Of Queue02"; 
+            
+            function initializeWavyText(text) {
+                textElement.innerHTML = ''; 
+                text.split('').forEach((char, index) => {
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = char === ' ' ? '\u00A0' : char;
+                    charSpan.classList.add('text-wave-char');
+                    charSpan.style.setProperty('--char-index', index); 
+                    textElement.appendChild(charSpan);
+                });
+            }
+            initializeWavyText(targetText);
+
+
+            // --- 2. Modal Logic (ปรับปรุง Scroll) ---
+            const imageModal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const closeButtonFloat = document.getElementById('closeButtonFloat');
+            
+            function closeModal() {
+                imageModal.classList.remove('active');
+                
+                // 💡 แก้ไข: กู้คืนตำแหน่งการเลื่อน
+                document.body.classList.remove('modal-open');
+                document.body.style.top = ''; // ลบ offset top ออก
+                window.scrollTo(0, scrollPosition); // เลื่อนกลับไปยังตำแหน่งที่บันทึกไว้
+                
+                setTimeout(() => {
+                    modalImage.src = ''; 
+                }, 300); 
+            }
+
+            window.openImageModal = function(linkElement) {
+                if (!navigator.onLine) {
+                    console.log("Cannot open modal while offline.");
+                    return; 
+                }
+
+                const placeholder = linkElement.querySelector('.video-placeholder');
+                if (placeholder) {
+                    if (placeholder.classList.contains('loaded')) { 
+                        const imageUrl = placeholder.getAttribute('data-image');
+                        if (imageUrl) {
+                            
+                            // 💡 แก้ไข: บันทึกตำแหน่งการเลื่อนก่อนเปิด Modal
+                            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                            
+                            modalImage.src = imageUrl;
+                            imageModal.classList.add('active');
+                            
+                            // 💡 แก้ไข: ใช้ Style top เพื่อชดเชยการเลื่อนเมื่อ body เป็น fixed
+                            document.body.style.top = `-${scrollPosition}px`;
+                            document.body.classList.add('modal-open'); 
+                        }
+                    } else {
+                        console.log("Image is still loading, cannot open modal yet.");
+                    }
+                }
+            }
+
+            closeButtonFloat.addEventListener('click', closeModal);
+            
+            // 🚫 ลบ Event Listener ที่ทำให้คลิกพื้นหลังปิด Modal ได้
+            /*
+            imageModal.addEventListener('click', function(e) {
+                if (e.target === imageModal) {
+                    closeModal();
+                }
+            });
+            */
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape" && imageModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            
+            // --- 3. Image Loading State Manager (เดิม) ---
+            function markAsLoaded(placeholder) {
+                placeholder.classList.remove('loading');
+                placeholder.classList.add('loaded');
+            }
+            
+            function handleImageLoading() {
+                if (!navigator.onLine) {
+                    console.log("Skipping image loading. Currently Offline.");
+                    return; 
+                }
+
+                const images = document.querySelectorAll('.product-card .video-placeholder img');
+
+                images.forEach(img => {
+                    const placeholder = img.closest('.video-placeholder');
+                    
+                    placeholder.classList.add('loading');
+                    placeholder.classList.remove('loaded');
+                    
+                    if (img.complete) {
+                        markAsLoaded(placeholder);
+                    } else {
+                        if (img.src !== placeholder.getAttribute('data-image')) {
+                            img.src = placeholder.getAttribute('data-image');
+                        }
+
+                        img.addEventListener('load', () => {
+                            setTimeout(() => {
+                                markAsLoaded(placeholder);
+                            }, 500); 
+                        }, { once: true });
+
+                        img.addEventListener('error', () => {
+                            console.error('Failed to load image:', img.src);
+                        }, { once: true });
+                    }
+                });
+            }
+            
+            // --- 4. New: Real-time Internet Check Logic (เดิม) ---
+            function updateConnectionStatus() {
+                if (navigator.onLine) {
+                    document.body.classList.remove('internet-offline');
+                    console.log("Internet: Online. Retrying image loading...");
+                    handleImageLoading(); 
+                } else {
+                    document.body.classList.add('internet-offline');
+                    console.log("Internet: Offline. Images revert to Loading state.");
+                    if (imageModal.classList.contains('active')) {
+                        closeModal();
+                    }
+                }
+            }
+
+            updateConnectionStatus();
+            window.addEventListener('online', updateConnectionStatus);
+            window.addEventListener('offline', updateConnectionStatus);
+
+        });
+    </script>
+</body>
+</html>
