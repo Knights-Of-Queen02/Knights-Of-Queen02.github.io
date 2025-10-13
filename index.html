@@ -48,6 +48,11 @@
             width: 100%;
         }
         
+        /* 💡 NEW: ปรับ body.menu-open เมื่อ sidebar เปิด */
+        body.menu-open {
+            overflow: hidden;
+        }
+
         /* [ถูกลบ] CSS สำหรับ body.internet-offline (ตามที่ร้องขอในรอบก่อน) */
 
         .container {
@@ -111,6 +116,61 @@
             cursor: pointer;
             color: var(--text-dark);
         }
+
+        /* --- 5. ส่วน Sidebar/Menu ใหม่ --- */
+        .sidebar {
+            height: 100%; /* เต็มความสูง */
+            width: 0; /* ซ่อนไว้เริ่มต้น */
+            position: fixed;
+            z-index: 1000; /* อยู่ด้านบนสุด */
+            top: 0;
+            right: 0;
+            background-color: var(--card-bg); 
+            overflow-x: hidden; 
+            transition: 0.3s; 
+            padding-top: 60px; /* เว้นที่ว่างสำหรับ navbar */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation; /* ป้องกันการเลื่อนที่ไม่ต้องการ */
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--text-dark);
+            display: block;
+            transition: 0.3s;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar a:hover {
+            background-color: var(--tag-bg);
+            color: var(--primary-color);
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            font-size: 36px;
+            margin-left: 50px;
+            line-height: 50px; /* จัดให้อยู่ตรงกลาง navbar */
+            color: var(--text-dark);
+            border-bottom: none; /* ลบเส้นใต้ออก */
+        }
+
+        /* แสดงเมนูเมื่อมีคลาส active */
+        .sidebar.active {
+            width: 250px; /* ความกว้างของเมนูเมื่อเปิด */
+        }
+        
+        @media screen and (min-width: 600px) {
+            .sidebar.active {
+                width: 300px;
+            }
+        }
+
 
         /* --- 2. ส่วน Make online (เดิม) --- */
         .make-online-section {
@@ -424,9 +484,17 @@
             <a href="#" class="logo">
                 <span id="typing-text"></span>
             </a>
-            <span class="menu-icon">&#9776;</span>
+            <span class="menu-icon" onclick="openNav()">&#9776;</span>
         </nav>
 
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            
+            <a href="index.html">Home</a>
+            
+            <a href="repo.html">Repo</a>
+        </div>
+        
         <section class="make-online-section">
             <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
             
@@ -493,11 +561,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            let scrollPosition = 0; // 💡 New: ตัวแปรสำหรับเก็บตำแหน่งการเลื่อน
+            let scrollPosition = 0; 
 
             // --- 1. Wavy Text Initialization Logic (เดิม) ---
             const textElement = document.getElementById('typing-text');
-            const targetText = "Knight Of Queue02"; 
+            const targetText = "Knight Of Queen02"; 
             
             function initializeWavyText(text) {
                 textElement.innerHTML = ''; 
@@ -510,9 +578,32 @@
                 });
             }
             initializeWavyText(targetText);
+            
+            // --- 2. NEW: Sidebar Menu Functions ---
+            const sidebar = document.getElementById("mySidebar");
+            const body = document.body;
+            
+            function openNav() {
+                // ปิด Modal หากเปิดอยู่
+                if (imageModal.classList.contains('active')) {
+                    closeModal();
+                }
+                
+                sidebar.classList.add('active');
+                body.classList.add('menu-open');
+            }
+
+            function closeNav() {
+                sidebar.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+            
+            // 💡 กำหนดให้ฟังก์ชันเข้าถึงได้จากนอก DOMContentLoaded
+            window.openNav = openNav;
+            window.closeNav = closeNav;
 
 
-            // --- 2. Modal Logic (ปรับปรุง Scroll) ---
+            // --- 3. Modal Logic (ปรับปรุง Scroll) ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
@@ -520,7 +611,7 @@
             function closeModal() {
                 imageModal.classList.remove('active');
                 
-                // 💡 แก้ไข: กู้คืนตำแหน่งการเลื่อน
+                // 💡 กู้คืนตำแหน่งการเลื่อน
                 document.body.classList.remove('modal-open');
                 document.body.style.top = ''; // ลบ offset top ออก
                 window.scrollTo(0, scrollPosition); // เลื่อนกลับไปยังตำแหน่งที่บันทึกไว้
@@ -536,19 +627,24 @@
                     return; 
                 }
 
+                // ปิด Sidebar หากเปิดอยู่
+                if (sidebar.classList.contains('active')) {
+                    closeNav();
+                }
+
                 const placeholder = linkElement.querySelector('.video-placeholder');
                 if (placeholder) {
                     if (placeholder.classList.contains('loaded')) { 
                         const imageUrl = placeholder.getAttribute('data-image');
                         if (imageUrl) {
                             
-                            // 💡 แก้ไข: บันทึกตำแหน่งการเลื่อนก่อนเปิด Modal
+                            // 💡 บันทึกตำแหน่งการเลื่อนก่อนเปิด Modal
                             scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
                             
                             modalImage.src = imageUrl;
                             imageModal.classList.add('active');
                             
-                            // 💡 แก้ไข: ใช้ Style top เพื่อชดเชยการเลื่อนเมื่อ body เป็น fixed
+                            // 💡 ใช้ Style top เพื่อชดเชยการเลื่อนเมื่อ body เป็น fixed
                             document.body.style.top = `-${scrollPosition}px`;
                             document.body.classList.add('modal-open'); 
                         }
@@ -560,23 +656,22 @@
 
             closeButtonFloat.addEventListener('click', closeModal);
             
-            // 🚫 ลบ Event Listener ที่ทำให้คลิกพื้นหลังปิด Modal ได้
-            /*
-            imageModal.addEventListener('click', function(e) {
-                if (e.target === imageModal) {
-                    closeModal();
-                }
-            });
-            */
 
             document.addEventListener('keydown', function(e) {
-                if (e.key === "Escape" && imageModal.classList.contains('active')) {
-                    closeModal();
+                if (e.key === "Escape") {
+                    // ปิด Modal ก่อน
+                    if (imageModal.classList.contains('active')) {
+                        closeModal();
+                    } 
+                    // ปิด Sidebar ทีหลัง
+                    else if (sidebar.classList.contains('active')) {
+                        closeNav();
+                    }
                 }
             });
             
             
-            // --- 3. Image Loading State Manager (เดิม) ---
+            // --- 4. Image Loading State Manager (เดิม) ---
             function markAsLoaded(placeholder) {
                 placeholder.classList.remove('loading');
                 placeholder.classList.add('loaded');
@@ -616,7 +711,7 @@
                 });
             }
             
-            // --- 4. New: Real-time Internet Check Logic (เดิม) ---
+            // --- 5. Real-time Internet Check Logic (เดิม) ---
             function updateConnectionStatus() {
                 if (navigator.onLine) {
                     document.body.classList.remove('internet-offline');
@@ -625,8 +720,12 @@
                 } else {
                     document.body.classList.add('internet-offline');
                     console.log("Internet: Offline. Images revert to Loading state.");
+                    // ปิด Modal และ Sidebar เมื่อออฟไลน์
                     if (imageModal.classList.contains('active')) {
                         closeModal();
+                    }
+                    if (sidebar.classList.contains('active')) {
+                        closeNav();
                     }
                 }
             }

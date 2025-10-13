@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knights Of Queen02 - Repository</title>
+    <title>Repo</title>
     
-    <meta name="description" content="A professional collection of exclusive tweaks and themes.">
+    <meta name="description" content="A modern, fast, and powerful open-source repository for exclusive iOS customization.">
     <meta name="theme-color" content="#000000"> 
     
     <link rel="shortcut icon" href="B6BB28C0-F7E4-4302-8CA9-158B5735C62A.gif" sizes="32x32" type="image/x-icon">
@@ -15,13 +15,13 @@
         /* --- 1. ตัวแปรสีและ Transition --- */
         :root {
             /* โทนสี Zebra/Dark */
-            --dark-bg: #000000; /* พื้นหลังดำสนิทเหมือน Zebra */
+            --dark-bg: #000000;
             --text-light: #ffffff;
             --text-secondary: #999999;
             
             /* โทนสีม่วง-น้ำเงิน (Accent Color) */
-            --accent-start: #7B68EE; /* Medium Slate Blue (Sileo/Zebra-like) */
-            --accent-end: #4169E1;   /* Royal Blue */
+            --accent-start: #7B68EE; /* สีม่วงสำหรับปุ่มและข้อความ */
+            --accent-end: #4169E1;
             --accent-shadow: rgba(123, 104, 238, 0.6);
             
             /* Transition Curve */
@@ -32,12 +32,13 @@
         @media (prefers-color-scheme: light) {
             body { background-color: #f5f5f5; color: #333; }
             .main-content h1, .main-content p { color: #333 !important; }
-            .add-repo-button {
+            .add-repo-button:not(.secondary) { 
                 background-image: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
                 color: var(--text-light);
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                border: none;
             }
-            .add-repo-button.secondary {
+            .add-repo-button.secondary { 
                 background-image: none;
                 background-color: #f5f5f5;
                 color: var(--accent-start);
@@ -49,6 +50,20 @@
                 background-color: #eeeeee !important;
                 color: var(--accent-start) !important;
                 border: 1px solid #ddd !important;
+            }
+            /* 💡 Light mode สำหรับปุ่ม Home */
+            .back-home-btn {
+                 color: #333 !important;
+                 background-color: #ffffff;
+                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                 border: 1px solid #e0e0e0;
+            }
+            /* ลบเงาขาวใน Light Mode */
+            .main-logo-container {
+                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+            .accent-text-light {
+                 color: var(--accent-start) !important;
             }
         }
 
@@ -71,6 +86,60 @@
             flex-direction: column;
             justify-content: flex-start;
         }
+        
+        /* 💡 NEW: คลาสสำหรับองค์ประกอบที่ต้องการ Fade In Up */
+        .fade-in-item {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* 💡 IMPROVED: ปุ่มกลับหน้าหลัก (Back Home Button) */
+        .back-home-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            text-decoration: none;
+            
+            /* UI ใหม่ */
+            background-image: linear-gradient(135deg, #222 0%, #000 100%);
+            color: var(--text-light);
+            border: 1px solid #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            
+            font-size: 15px; 
+            font-weight: 500;
+            padding: 8px 15px; 
+            border-radius: 20px; 
+            transition: var(--smooth-transition);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+            
+            /* 💡 Fade In Up สำหรับปุ่ม Home */
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out 0.2s forwards;
+        }
+        
+        .back-home-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .back-home-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        
+        .back-home-btn .icon {
+            font-weight: 900; 
+            margin-right: 5px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
 
         .container {
             flex-grow: 1;
@@ -79,6 +148,7 @@
             justify-content: flex-start;
             align-items: center;
             padding: 40px 20px 20px; 
+            padding-top: 50px; 
         }
 
         /* --- 3. Main Content (Hero Section) --- */
@@ -93,33 +163,50 @@
             width: 90px;
             height: 90px;
             margin: 0 auto 30px;
-            background-color: var(--text-light); 
+            background-color: transparent; /* 💡 เปลี่ยนเป็น transparent เพื่อไม่ให้มีพื้นหลัง */
             border-radius: 20%; 
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            box-shadow: none; 
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: subtlePulse 5s ease-in-out infinite;
+            animation: subtlePulse 5s ease-in-out infinite, fadeInUp 0.5s ease-out forwards; 
+            opacity: 0; 
+            transform: translateY(10px); 
         }
         
-        .main-logo-image {
-            width: 90%; 
-            height: 90%;
-            object-fit: cover;
-            background-image: url('https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif'); 
-            background-size: cover;
-            background-position: center;
+        /* 💡 NEW: style สำหรับรูปภาพตรงๆ ไม่ใช่พื้นหลัง */
+        .main-logo-container img {
+            width: 100%; /* ใช้เต็มพื้นที่ container */
+            height: 100%;
+            object-fit: contain; /* 💡 ใช้ contain เพื่อให้รูปไม่ถูกตัดหากอัตราส่วนไม่เท่ากัน */
             border-radius: 15%; 
         }
         
         .main-content h1 {
-            font-size: 52px; 
+            font-size: 52px; /* 💡 ขนาดใหญ่เพื่อให้ขึ้นสองบรรทัด */
             font-weight: 900;
             margin-bottom: 20px;
-            letter-spacing: -1.5px;
-            line-height: 1;
+            letter-spacing: -1.5px; /* ปรับ spacing ให้กระชับ */
+            line-height: 1.1; /* ปรับ line-height ให้กระชับยิ่งขึ้น */
+            /* ลบ white-space: nowrap ออกไป */
+            
+            /* 💡 Fade In Up สำหรับ H1 (หน่วงเวลา 0.1s) */
+            animation: fadeInUp 0.5s ease-out 0.1s forwards;
+            color: var(--text-light); /* สีข้อความเริ่มต้น */
+        }
+        
+        /* 💡 NEW: สไตล์สำหรับคำว่า "Knights Of Queen02" ให้เป็นสีม่วง */
+        .accent-text {
+            color: var(--accent-start);
+            letter-spacing: normal;
+        }
+        
+        /* 💡 สไตล์สำหรับคำว่า "Knights Of Queen02" ใน Light Mode */
+        @media (prefers-color-scheme: light) {
+            .accent-text {
+                color: var(--accent-start) !important;
+            }
         }
 
         .main-content p {
@@ -131,30 +218,43 @@
             max-width: 350px;
             margin-left: auto;
             margin-right: auto;
+             /* 💡 Fade In Up สำหรับ P (หน่วงเวลา 0.2s) */
+            animation: fadeInUp 0.5s ease-out 0.2s forwards;
         }
         
+        /* 💡 กำหนด Opacity และ Transform เริ่มต้นสำหรับองค์ประกอบที่ใช้ Fade In Up */
+        .main-content h1, 
+        .main-content p, 
+        .buttons-container,
+        .secondary-info {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
         /* --- 4. ปุ่มคู่ (Buttons Container) --- */
         .buttons-container {
             display: flex;
-            justify-content: space-between;
-            gap: 15px; /* ระยะห่างระหว่างปุ่ม */
+            justify-content: center; 
+            gap: 15px; 
             width: 100%;
             max-width: 400px;
             margin-bottom: 25px;
+            /* 💡 Fade In Up สำหรับ Buttons Container (หน่วงเวลา 0.3s) */
+            animation: fadeInUp 0.5s ease-out 0.3s forwards;
         }
 
         .add-repo-button {
-            /* ปรับให้ปุ่มมีขนาดครึ่งหนึ่ง */
-            width: 50%; 
-            flex-grow: 1; /* ให้ปุ่มขยายเท่ากัน */
+            width: 100%; 
+            flex-grow: 1; 
             padding: 18px 10px; 
             
+            /* 💡 นี่คือ UI ปุ่มหลัก (Primary) */
             background-image: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
             
             color: var(--text-light);
             border: none;
             border-radius: 12px; 
-            font-size: 17px; /* เล็กลงเล็กน้อยให้พอดีกับชื่อ */
+            font-size: 17px; 
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
@@ -163,34 +263,39 @@
             transition: var(--smooth-transition);
         }
 
+        /* 💡 โค้ดสำหรับปุ่มรอง (Secondary/Add Sileo) */
+        .add-repo-button.secondary {
+            background-image: none;
+            background-color: var(--dark-bg);
+            color: var(--accent-start); 
+            border: 2px solid var(--accent-start); 
+            box-shadow: none; 
+        }
+        
         .add-repo-button:hover {
             opacity: 0.95;
             transform: translateY(-3px); 
             box-shadow: 0 8px 25px var(--accent-shadow);
         }
+        
+        .add-repo-button.secondary:hover {
+            background-color: rgba(123, 104, 238, 0.1); 
+            transform: translateY(-3px); 
+            box-shadow: none; 
+        }
+        
         .add-repo-button:active {
             transform: translateY(0);
             box-shadow: 0 4px 10px var(--accent-shadow);
             opacity: 1;
         }
-
-        /* 💡 ปุ่มที่สอง: ทำให้ดูเป็นปุ่มรอง (ถ้าต้องการ) */
-        .add-repo-button.secondary {
-            /* โทนสีเดียวกันแต่เป็นแบบ Outline หรือ Solid */
-            background-image: none;
-            background-color: var(--dark-bg);
-            color: var(--accent-start); /* Text สีม่วง */
-            border: 2px solid var(--accent-start); /* ขอบสีม่วง */
-            box-shadow: none; /* ไม่มีเงาหนา */
-        }
-        
-        .add-repo-button.secondary:hover {
-            background-color: rgba(123, 104, 238, 0.1); /* มีสีม่วงอ่อนๆ เมื่อ Hover */
-            transform: translateY(-3px); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
         
         /* --- 5. Secondary Info (Version & URL) --- */
+        .secondary-info {
+             /* 💡 Fade In Up สำหรับ Secondary Info (หน่วงเวลา 0.4s) */
+            animation: fadeInUp 0.5s ease-out 0.4s forwards;
+        }
+        
         .version-text {
             font-size: 14px;
             color: var(--text-secondary);
@@ -213,54 +318,66 @@
         }
 
         /* --- 6. Footer และ Animation Keyframes --- */
-        .footer-section {
-            background-color: var(--dark-bg);
-            color: #555; 
-            padding: 30px 20px;
-            font-size: 12px;
-            width: 100%;
-            border-top: 1px solid #111;
-        }
+.footer-section {
+    /* 💡 NEW: เพิ่ม text-align: center; เพื่อจัดข้อความกลาง */
+    text-align: center;
+    
+    background-color: var(--dark-bg);
+    color: #555; 
+    /* 💡 NEW: ลด padding ด้านบน/ล่าง ให้เหมือน index.html */
+    padding: 10px 20px; 
+    font-size: 12px;
+    width: 100%;
+    border-top: 1px solid #111;
+    
+    /* 💡 เพิ่ม margin-top เพื่อสร้างช่องว่างด้านบน */
+    margin-top: 30px; 
+}
+
 
         @keyframes subtlePulse {
             0% { transform: scale(1); }
             50% { transform: scale(0.99); }
             100% { transform: scale(1); }
         }
-        .main-logo-container {
-             animation: subtlePulse 5s ease-in-out infinite;
+        
+        /* 💡 NEW: Fade In Up Animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
     </style>
 </head>
 <body>
 
+    <a href="index.html" class="back-home-btn">
+        <span class="icon">&#8592;</span> Home
+    </a>
+
     <div class="container">
         <div class="main-content">
             
             <div class="main-logo-container">
-                </div>
+                <img src="IMG_2338.GIF" alt="Knights Of Queen02 Logo">
+            </div>
             
-            <h1>Knights Of Queen02</h1>
+            <h1 class="fade-in-item">Welcome To<br><span class="accent-text">Knights Of Queen02</span></h1>
             
-            <p>
+            <p class="fade-in-item">
                 A modern, fast, and powerful <br> open-source repository for <br> exclusive iOS customization.
             </p>
 
             <div class="buttons-container">
-                <a href="apt-key-repo:https://[Your-Repo-URL-Here]/" class="add-repo-button">
-                    1. Add Sileo
-                </a>
-                
-                <a href="apt-key-repo:https://[Your-Repo-URL-Here]/" class="add-repo-button secondary">
-                    2. Add Zebra
+                <a href="sileo://source/https://Knights-Of-Queen02.github.io/" class="add-repo-button secondary">
+                    Add Sileo
                 </a>
             </div>
             
             <div class="secondary-info">
-                <p class="version-text">Version 1.0.0</p>
-                <a href="https://[Your-Repo-URL-Here]/" class="repo-url-copy">https://[Your-Repo-URL-Here]/</a>
-            </div>
+                </div>
         </div>
     </div>
     
@@ -269,7 +386,9 @@
     </footer>
 
     <script>
+        // ลบโค้ด JavaScript ทั้งหมดที่เกี่ยวข้องกับการคัดลอก URL ออก
         document.addEventListener('DOMContentLoaded', function() {
+            /* // โค้ดที่ถูกลบออก:
             const repoUrlElement = document.querySelector('.repo-url-copy');
             if (repoUrlElement) {
                 repoUrlElement.addEventListener('click', function(e) {
@@ -304,7 +423,7 @@
                 });
             }
 
-            // Custom Toast Notification Function (เหมือนเดิม)
+            // Custom Toast Notification Function
             function showToast(message, type = 'success') {
                 const existingToast = document.querySelector('.custom-toast');
                 if (existingToast) existingToast.remove();
@@ -327,7 +446,7 @@
                     transition: 'opacity 0.3s ease, transform 0.3s ease',
                     fontSize: '15px',
                     fontWeight: '500',
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
+                    box-shadow: '0 4px 10px rgba(0,0,0,0.3)'
                 });
                 
                 document.body.appendChild(toast);
@@ -343,6 +462,7 @@
                     toast.addEventListener('transitionend', () => toast.remove(), { once: true });
                 }, 2000); 
             }
+            */
         });
     </script>
 </body>
