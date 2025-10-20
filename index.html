@@ -251,12 +251,10 @@
             height: 0;
             background-color: var(--border-color); 
             border-radius: 8px;
-            /* **[แก้ไข]** ลบ margin-bottom ออก เพื่อให้ปุ่มถูกจัดระยะโดย .submit-button แทน */
             position: relative;
             overflow: hidden; 
             margin: 0 auto 0 auto;
             cursor: pointer; 
-            /* เพิ่ม touch-action: none; เพื่อช่วยเรื่อง Long Press บนมือถือ */
             touch-action: manipulation; 
         }
         
@@ -330,9 +328,11 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            /* **[แก้ไข]** ลบ margin-bottom ออก */
             margin: 0 auto; 
             background-color: var(--border-color); 
+            /* เพิ่ม cursor: pointer เพื่อให้รู้ว่าคลิกได้ */
+            cursor: pointer; 
+            touch-action: manipulation; 
         }
 
         .carousel-images {
@@ -413,7 +413,6 @@
 
         /* ปุ่ม Contact Admin --- */
         .submit-button {
-            /* **[แก้ไข]** เพิ่ม margin-top เพื่อสร้างช่องว่างด้านบนที่สม่ำเสมอ */
             margin-top: 20px;
             width: 100%;
             padding: 12px 15px;
@@ -586,7 +585,7 @@
         
         <section class="make-online-section">
             <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
-            
+                                   
             <p>
                 Customize your UI freely. <a 
                     href="https://t.me/K02_TH" 
@@ -668,6 +667,7 @@
                         </div>
                     </div>
                 </a>
+                
                 <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
                     Contact Admin
                 </a>
@@ -677,8 +677,8 @@
                 <div class="tag-capsule">Server Key (350 ฿ / 1 Month)</div>
                 
                 <a href="img-script.html" class="image-link" target="_blank">
-                    <div class="video-placeholder loading" data-image="https//:;url4.png"> 
-                        <img src="https//:;url4.png" alt="Script Feature Preview 4">
+                    <div class="video-placeholder loading" data-image="server-key-placeholder.png"> 
+                        <img src="server-key-placeholder.png" alt="Script Feature Preview 4">
                     </div>
                 </a>
                 
@@ -691,8 +691,8 @@
                 <div class="tag-capsule">Custom Menu Objective-C (3333 ฿)</div>
                 
                 <a href="img-opti.html" class="image-link" target="_blank">
-                    <div class="video-placeholder loading" data-image="https://img4.png"> 
-                        <img src="https://img4.png" alt="Optimization Service Preview 5">
+                    <div class="video-placeholder loading" data-image="obj-c-menu-placeholder.png"> 
+                        <img src="obj-c-menu-placeholder.png" alt="Optimization Service Preview 5">
                     </div>
                 </a>
                 
@@ -739,11 +739,10 @@
                 // หยุดการทำงานของ Modal/Click สั้น
                 clearTimer(); 
                 
-                // ตรวจสอบว่าเป็น Long Press จาก trigger Element ที่ถูกต้องหรือไม่
                 if (currentLinkTarget) {
                     console.log("Long press detected. Opening:", currentLinkTarget);
                     window.open(currentLinkTarget, '_blank');
-                    currentLinkTarget = null; // รีเซ็ต
+                    currentLinkTarget = null; 
                     
                     // ป้องกันการทำงานของ touchstart/mousedown ซ้ำ
                     event.stopPropagation(); 
@@ -788,7 +787,7 @@
             }
 
 
-            // --- 1. Wavy Text Initialization Logic (เดิม) ---
+            // --- 1. Wavy Text Initialization Logic ---
             const textElement = document.getElementById('typing-text');
             const targetText = "Knight Of Queen02"; 
             
@@ -826,7 +825,7 @@
             window.closeNav = closeNav;
 
 
-            // --- 3. Modal Logic (รวมสำหรับ Card เดิม) ---
+            // --- 3. Modal Logic (รวมสำหรับ Card เดิมและ Carousel) ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
@@ -850,7 +849,6 @@
                     return; 
                 }
                 if (pressTimer) {
-                    // ถ้ากำลังกดค้างอยู่ ให้ยกเลิกการเปิด Modal
                     clearTimer(); 
                     return;
                 }
@@ -862,18 +860,15 @@
                 let imageUrl = null;
                 let placeholder = null;
 
-                // Logic สำหรับ Card 1, 2, 4, 5: หา .video-placeholder ภายใน a.image-link
-                if (triggerElement.matches('.image-link')) {
-                    // สำหรับ Card 1, 2, 4, 5
-                    placeholder = triggerElement.querySelector('.video-placeholder');
-                    
-                    // สำหรับ Card 3 (Carousel): ต้องหา .video-placeholder ที่ active อยู่
-                    if (!placeholder) {
-                        const carouselContainer = triggerElement.querySelector('.carousel-container');
-                        const carousel = carousels[carouselContainer?.id];
-                        if (carousel) {
-                             placeholder = carousel.links[carousel.slideIndex]; 
-                        }
+                // สำหรับ Card ปกติ (1, 2, 4, 5)
+                placeholder = triggerElement.querySelector('.video-placeholder');
+                
+                // สำหรับ Card 3 (Carousel): ต้องหา .video-placeholder ที่ active อยู่
+                const carouselContainer = triggerElement.querySelector('.carousel-container');
+                if (carouselContainer) {
+                    const carousel = carousels[carouselContainer.id];
+                    if (carousel) {
+                        placeholder = carousel.links[carousel.slideIndex]; 
                     }
                 }
                 
@@ -881,7 +876,7 @@
                 if (placeholder && placeholder.classList.contains('loaded')) { 
                     imageUrl = placeholder.getAttribute('data-image');
                 } else {
-                    console.log("Image source not found or still loading.");
+                    console.log("Image source not found or still loading for modal.");
                 }
 
 
@@ -922,7 +917,6 @@
                     return; 
                 }
 
-                // เลือกทั้ง .video-placeholder ปกติ และที่อยู่ใน carousel
                 const placeholders = document.querySelectorAll('.product-card .video-placeholder');
 
                 placeholders.forEach(placeholder => {
@@ -953,7 +947,7 @@
                 });
             }
             
-            // --- 5. Real-time Internet Check Logic (เดิม) ---
+            // --- 5. Real-time Internet Check Logic ---
             function updateConnectionStatus() {
                 if (navigator.onLine) {
                     document.body.classList.remove('internet-offline');
@@ -976,12 +970,11 @@
             window.addEventListener('offline', updateConnectionStatus);
 
 
-            // --- 6. Carousel Logic (ปรับปรุงให้ใช้ .video-placeholder) ---
+            // --- 6. Carousel Logic ---
             const carousels = {}; 
 
             function initializeCarousel(carouselId) {
                 const carouselElement = document.getElementById(carouselId);
-                // links คือ div.video-placeholder ภายใน carousel
                 const links = carouselElement.querySelectorAll('.carousel-images .video-placeholder'); 
                 const dots = carouselElement.querySelectorAll('.indicator-dot');
                 carousels[carouselId] = {
@@ -1024,38 +1017,36 @@
                 }
             }
 
-            // Initialize the "Custom Theme" carousel on page load
             initializeCarousel('customThemeCarousel');
 
 
-            // --- 7. Long Press (Long Click) Logic สำหรับเปิด img.html ---
+            // --- 7. Long Press (Long Click) & Short Click Logic (สำหรับ Modal/HTML) ---
             
-            // --- นำ Long Press ไปใช้กับ Card ปกติ (1, 2, 4, 5) และ Card 3 ที่เป็น Carousel ---
             document.querySelectorAll('.image-link').forEach(link => {
                 const htmlUrl = link.href;
                 // placeholder อาจเป็น .video-placeholder หรือ .carousel-container (สำหรับ Card 3)
                 const placeholder = link.querySelector('.video-placeholder') || link.querySelector('.carousel-container'); 
                 
-                // ตรวจสอบว่าเป็น Card 3 ที่เราต้องการให้คลิกแล้วไปหน้า HTML ทันทีหรือไม่
-                const isCard3 = link.closest('.product-card').querySelector('#customThemeCarousel'); 
+                // ตรวจสอบว่าลิงก์นี้ควรเปิด Modal เมื่อคลิกสั้นหรือไม่ (สำหรับทุก Card ที่มีรูปภาพ)
+                const isModalLink = !!placeholder; 
 
                 if(placeholder) {
-                    // กำหนด Long Press สำหรับทุก Card
+                    // กำหนด Long Press สำหรับทุก Card (กดค้างไปหน้า HTML)
                     setupLongPressListeners(placeholder, htmlUrl);
                 }
                 
-                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal/ไปหน้า HTML)
+                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal)
                 link.addEventListener('click', function(event) {
-                    if (isCard3) {
-                        // Card 3: ปล่อยให้คลิกทำงานตาม href="img-1.html" ปกติ
-                        if (pressTimer) { clearTimer(); } // ป้องกันการทำงานของ Long Press
-                        return; 
-                    }
                     
-                    // Card อื่นๆ (1, 2, 4, 5): ป้องกันการไป href และเปิด Modal แทน
-                    event.preventDefault(); 
-                    if (!pressTimer) { // ถ้าไม่มี timer (เป็นการคลิกสั้น)
-                       window.openImageModal(link);
+                    if (isModalLink) {
+                        // Card ที่มีรูปภาพ/Carousel ทั้งหมด: ป้องกันการไป href และเปิด Modal แทน
+                        event.preventDefault(); 
+                        
+                        if (!pressTimer) { // ถ้าไม่มี timer (เป็นการคลิกสั้น)
+                           window.openImageModal(link);
+                        } else {
+                           clearTimer(); // ยกเลิก Long Press ที่กำลังจะเกิด
+                        }
                     } 
                 });
             });
