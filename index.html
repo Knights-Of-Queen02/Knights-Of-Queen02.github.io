@@ -244,19 +244,26 @@
             cursor: pointer; 
         }
 
+        /* Card เดิม (video-placeholder) และ Carousel Items */
         .video-placeholder {
             width: 100%;
             padding-top: 56.25%; 
             height: 0;
             background-color: var(--border-color); 
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* สำหรับ Card ปกติ */
             position: relative;
             overflow: hidden; 
-            margin: 0 auto 20px;
+            margin: 0 auto; /* สำหรับ Card ปกติ */
             cursor: pointer; 
         }
         
+        /* แก้ margin-bottom สำหรับ video-placeholder ที่อยู่ใน carousel */
+        .carousel-images .video-placeholder {
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
         .video-placeholder img {
             position: absolute;
             top: 0;
@@ -269,6 +276,7 @@
         }
         
         .video-placeholder.loading::after {
+            /* Shimmer effect */
             content: "";
             position: absolute;
             top: 0;
@@ -326,8 +334,7 @@
 
         .carousel-images {
             display: flex;
-            /* 💡 เพิ่มอนิเมชั่นให้การเลื่อนรูปภาพสมูท */
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth animation */
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
             position: absolute;
             top: 0;
             left: 0;
@@ -335,15 +342,12 @@
             height: 100%;
         }
 
-        .carousel-images img {
+        .carousel-images .video-placeholder {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            flex-shrink: 0; 
-            display: block; 
-            cursor: pointer; /* ให้คลิกเพื่อเปิด Modal ได้ */
+            padding-top: 0;
         }
-
+        
         .carousel-button {
             position: absolute;
             top: 50%;
@@ -430,7 +434,7 @@
             outline: none;                    
         }
         
-        /* --- Modal Styles --- */
+        /* --- Modal Styles (สำหรับ Card เก่าและ Carousel) --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -513,6 +517,7 @@
             right: 15px;
             z-index: 1001;
             display: flex;
+            align-items: center; 
         }
 
         .control-button {
@@ -529,6 +534,24 @@
             font-size: 28px;
             transition: color 0.2s; 
         }
+        
+        /* สไตล์สำหรับปุ่ม View Detail */
+        #viewDetailButton {
+            font-size: 16px !important; 
+            margin-right: 15px; 
+            border: 1px solid white; 
+            padding: 5px 15px !important; 
+            border-radius: 5px; 
+            background-color: rgba(255, 255, 255, 0.2); 
+            transition: background-color 0.3s;
+            line-height: 1.5; /* เพื่อให้ข้อความอยู่ตรงกลาง */
+        }
+        
+        #viewDetailButton:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            color: var(--text-dark);
+        }
+
 
         .control-button:hover {
             background-color: transparent; 
@@ -591,7 +614,7 @@
             <div class="product-card"> 
                 <div class="tag-capsule">Control Panel Update (250 ฿ / 1 Month)</div>
                 
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-cp.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png">
                         <img src="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png" alt="Multi Color FPS Preview"> 
                     </div>
@@ -605,7 +628,7 @@
             <div class="product-card">
                 <div class="tag-capsule">Make Menu (150 ฿)</div>
                 
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-menu.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/QNfhcQMz/73692948-18-E3-4211-A3-A4-5590-D81-F42-C2.png">
                         <img src="https://i.postimg.cc/QNfhcQMz/73692948-18-E3-4211-A3-A4-5590-D81-F42-C2.png" alt="White Color FPS Preview">
                     </div>
@@ -621,20 +644,39 @@
                 
                 <div class="carousel-container" id="customThemeCarousel">
                     <div class="carousel-images">
-                        <img src="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" alt="Custom Theme Image 1" 
-                             data-modal-image="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png"
-                             onclick="openModalFromCarousel('customThemeCarousel', this)">
                         
-                        <img src="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" alt="Custom Theme Image 2"
-                             data-modal-image="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png"
-                             onclick="openModalFromCarousel('customThemeCarousel', this)">
+                        <div 
+                            class="video-placeholder loading" 
+                            data-image="https://i.postimg.cc/26K1V2h7/placeholder-theme-3.png" 
+                            data-html-url="img-1.html" 
+                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
+                        > 
+                             <img src="https://i.postimg.cc/26K1V2h7/placeholder-theme-3.png" alt="Custom Theme Image 1">
+                        </div>
                         
-                        <img src="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" alt="Custom Theme Image 3"
-                             data-modal-image="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png"
-                             onclick="openModalFromCarousel('customThemeCarousel', this)">
+                        <div 
+                            class="video-placeholder loading" 
+                            data-image="https://i.postimg.cc/pr09X62g/placeholder-theme-2.png" 
+                            data-html-url="img-2.html" 
+                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
+                        >
+                             <img src="https://i.postimg.cc/pr09X62g/placeholder-theme-2.png" alt="Custom Theme Image 2">
+                        </div>
+                        
+                        <div 
+                            class="video-placeholder loading" 
+                            data-image="https://i.postimg.cc/MGpQ150F/placeholder-theme-1.png" 
+                            data-html-url="img-3.html" 
+                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
+                        >
+                             <img src="https://i.postimg.cc/MGpQ150F/placeholder-theme-1.png" alt="Custom Theme Image 3">
+                        </div>
+                        
                     </div>
-                    <button class="carousel-button prev" onclick="moveCarousel('customThemeCarousel', -1)">&#10094;</button>
-                    <button class="carousel-button next" onclick="moveCarousel('customThemeCarousel', 1)">&#10095;</button>
+                    
+                    <button class="carousel-button prev" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', -1)">&#10094;</button>
+                    <button class="carousel-button next" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', 1)">&#10095;</button>
+                    
                     <div class="carousel-indicators">
                         <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
                         <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 2)"></span>
@@ -650,7 +692,7 @@
             <div class="product-card">
                 <div class="tag-capsule">Script Feature (100 ฿)</div>
                 
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-script.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png"> 
                         <img src="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png" alt="Script Feature Preview 4">
                     </div>
@@ -664,7 +706,7 @@
             <div class="product-card">
                 <div class="tag-capsule">Optimization Service (400 ฿)</div>
                 
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-opti.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png"> 
                         <img src="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png" alt="Optimization Service Preview 5">
                     </div>
@@ -680,6 +722,9 @@
 
     <div id="imageModal" class="modal-overlay">
         <div class="control-buttons-container">
+            <button id="viewDetailButton" class="control-button" style="display: none;">
+                View Detail &rarr;
+            </button>
             <span class="control-button close-button-float" id="closeButtonFloat">&times;</span> 
         </div>
 
@@ -737,13 +782,19 @@
             window.closeNav = closeNav;
 
 
-            // --- 3. Modal Logic ---
+            // --- 3. Modal Logic (รวมสำหรับ Card เดิมและ Carousel) ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
+            // 💡 เพิ่มการเรียกตัวแปรสำหรับปุ่มใหม่
+            const viewDetailButton = document.getElementById('viewDetailButton'); 
             
             function closeModal() {
                 imageModal.classList.remove('active');
+                
+                // 💡 Reset ปุ่มเมื่อปิด Modal
+                viewDetailButton.style.display = 'none'; 
+                viewDetailButton.onclick = null; 
                 
                 document.body.classList.remove('modal-open');
                 document.body.style.top = ''; 
@@ -754,8 +805,8 @@
                 }, 300); 
             }
 
-            // Function สำหรับ Card เดิม (video-placeholder)
-            window.openImageModal = function(linkElement) {
+            // Function สำหรับ Card ทั้งหมด
+            window.openImageModal = function(triggerElement) {
                 if (!navigator.onLine) {
                     console.log("Cannot open modal while offline.");
                     return; 
@@ -765,49 +816,52 @@
                     closeNav();
                 }
 
-                const placeholder = linkElement.querySelector('.video-placeholder');
-                if (placeholder && placeholder.classList.contains('loaded')) { 
-                    const imageUrl = placeholder.getAttribute('data-image');
-                    if (imageUrl) {
-                        
-                        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                        modalImage.src = imageUrl;
-                        imageModal.classList.add('active');
-                        document.body.style.top = `-${scrollPosition}px`;
-                        document.body.classList.add('modal-open'); 
-                    }
-                } else {
-                    console.log("Image is still loading, cannot open modal yet.");
-                }
-            }
-            
-            // Function สำหรับ Carousel NEW
-            window.openModalFromCarousel = function(carouselId, clickedImage) {
-                if (!navigator.onLine) {
-                    console.log("Cannot open modal while offline.");
-                    return; 
-                }
+                let imageUrl = null;
+                let placeholder = null;
+                let htmlUrl = null; 
 
-                const carousel = carousels[carouselId];
-                if (!carousel) return;
-
-                // ตรวจสอบว่ารูปที่คลิกคือรูปที่กำลังแสดงอยู่หรือไม่
-                if (clickedImage !== carousel.images[carousel.slideIndex]) {
-                    return; 
+                // 1. Logic สำหรับ Card 1, 2, 4, 5 (มี a.image-link > div.video-placeholder)
+                if (triggerElement.matches('.image-link')) {
+                    placeholder = triggerElement.querySelector('.video-placeholder');
+                    htmlUrl = triggerElement.href; 
                 }
-
-                const imageUrl = clickedImage.getAttribute('data-modal-image');
-                if (imageUrl) {
-                    if (sidebar.classList.contains('active')) {
-                        closeNav();
-                    }
+                // 2. Logic สำหรับ Carousel (Card 3: คลิกจาก div.carousel-container)
+                else if (triggerElement.matches('.carousel-container')) {
+                    const carouselId = triggerElement.id;
+                    const carousel = carousels[carouselId];
                     
+                    if (carousel) {
+                         // placeholder คือ div.video-placeholder ที่กำลังแสดงอยู่ (อยู่ในตำแหน่ง slideIndex)
+                        placeholder = carousel.links[carousel.slideIndex]; 
+                        htmlUrl = placeholder.getAttribute('data-html-url'); 
+                    }
+                }
+                
+                // ดึง URL รูปภาพและตรวจสอบสถานะ Loading
+                if (placeholder && placeholder.classList.contains('loaded')) { 
+                    imageUrl = placeholder.getAttribute('data-image');
+                } else {
+                    console.log("Image source not found or still loading.");
+                }
+
+
+                if (imageUrl) {
                     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
                     modalImage.src = imageUrl;
                     imageModal.classList.add('active');
                     document.body.style.top = `-${scrollPosition}px`;
                     document.body.classList.add('modal-open'); 
-                }
+                    
+                    // 💡 ตั้งค่าปุ่ม View Detail
+                    if (htmlUrl) {
+                        viewDetailButton.style.display = 'block';
+                        viewDetailButton.onclick = function() {
+                            window.open(htmlUrl, '_blank'); 
+                        };
+                    } else {
+                        viewDetailButton.style.display = 'none';
+                    }
+                } 
             }
 
 
@@ -826,7 +880,7 @@
             });
             
             
-            // --- 4. Image Loading State Manager (เดิม) ---
+            // --- 4. Image Loading State Manager (รวม Carousel) ---
             function markAsLoaded(placeholder) {
                 placeholder.classList.remove('loading');
                 placeholder.classList.add('loaded');
@@ -838,19 +892,24 @@
                     return; 
                 }
 
-                const images = document.querySelectorAll('.product-card .video-placeholder img');
+                // โหลดรูปภาพทั้งหมด: ทั้งใน video-placeholder (Card ปกติ) และใน Carousel
+                const placeholders = document.querySelectorAll('.product-card .video-placeholder');
 
-                images.forEach(img => {
-                    const placeholder = img.closest('.video-placeholder');
+                placeholders.forEach(placeholder => {
+                    // กำหนด element img ที่อยู่ภายใน
+                    const img = placeholder.querySelector('img'); 
                     
                     placeholder.classList.add('loading');
                     placeholder.classList.remove('loaded');
                     
-                    if (img.complete) {
+                    // ใช้ data-image เป็น source
+                    const imageSource = placeholder.getAttribute('data-image');
+
+                    if (img.complete && img.src === imageSource) {
                         markAsLoaded(placeholder);
                     } else {
-                        if (img.src !== placeholder.getAttribute('data-image')) {
-                            img.src = placeholder.getAttribute('data-image');
+                        if (img.src !== imageSource) {
+                            img.src = imageSource;
                         }
 
                         img.addEventListener('load', () => {
@@ -860,7 +919,7 @@
                         }, { once: true });
 
                         img.addEventListener('error', () => {
-                            console.error('Failed to load image:', img.src);
+                            console.error('Failed to load image:', imageSource);
                         }, { once: true });
                     }
                 });
@@ -889,18 +948,19 @@
             window.addEventListener('offline', updateConnectionStatus);
 
 
-            // --- NEW: Carousel Logic ---
+            // --- 6. Carousel Logic (ปรับปรุงให้ใช้ .video-placeholder) ---
             const carousels = {}; 
 
             function initializeCarousel(carouselId) {
                 const carouselElement = document.getElementById(carouselId);
-                const images = carouselElement.querySelectorAll('.carousel-images img');
+                // links คือ div.video-placeholder
+                const links = carouselElement.querySelectorAll('.carousel-images .video-placeholder'); 
                 const dots = carouselElement.querySelectorAll('.indicator-dot');
                 carousels[carouselId] = {
                     slideIndex: 0,
-                    images: images,
+                    links: links, 
                     dots: dots,
-                    totalSlides: images.length
+                    totalSlides: links.length
                 };
                 showSlides(carouselId, 0); 
             }
