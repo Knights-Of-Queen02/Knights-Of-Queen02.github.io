@@ -367,6 +367,7 @@
             transition: opacity 0.3s ease, background-color 0.3s ease;
             line-height: 1;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            pointer-events: auto; /* Ensure buttons are clickable */
         }
 
         .carousel-button:hover {
@@ -400,6 +401,7 @@
             border-radius: 50%;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            pointer-events: auto; /* Ensure indicators are clickable */
         }
 
         .indicator-dot.active {
@@ -629,45 +631,43 @@
             <div class="product-card">
                 <div class="tag-capsule">Make Menu Free Fire (2222 ฿)</div>
                 
-                <div class="carousel-container" id="customThemeCarousel">
-                    <div class="carousel-images">
-                        
-                        <div 
-                            class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" 
-                            data-html-url="img-1.html" 
-                            > 
-                             <img src="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" alt="Custom Theme Image 1">
+                <a href="img-1.html" class="image-link" target="_blank">
+                    <div class="carousel-container" id="customThemeCarousel">
+                        <div class="carousel-images">
+                            
+                            <div 
+                                class="video-placeholder loading" 
+                                data-image="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" 
+                                > 
+                                <img src="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" alt="Custom Theme Image 1">
+                            </div>
+                            
+                            <div 
+                                class="video-placeholder loading" 
+                                data-image="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" 
+                                >
+                                <img src="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" alt="Custom Theme Image 2">
+                            </div>
+                            
+                            <div 
+                                class="video-placeholder loading" 
+                                data-image="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" 
+                                >
+                                <img src="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" alt="Custom Theme Image 3">
+                            </div>
+                            
                         </div>
                         
-                        <div 
-                            class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" 
-                            data-html-url="img-2.html" 
-                            >
-                             <img src="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" alt="Custom Theme Image 2">
-                        </div>
+                        <button class="carousel-button prev" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', -1)">&#10094;</button>
+                        <button class="carousel-button next" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', 1)">&#10095;</button>
                         
-                        <div 
-                            class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" 
-                            data-html-url="img-3.html" 
-                            >
-                             <img src="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" alt="Custom Theme Image 3">
+                        <div class="carousel-indicators">
+                            <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
+                            <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 2)"></span>
+                            <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 3)"></span>
                         </div>
-                        
                     </div>
-                    
-                    <button class="carousel-button prev" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', -1)">&#10094;</button>
-                    <button class="carousel-button next" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', 1)">&#10095;</button>
-                    
-                    <div class="carousel-indicators">
-                        <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
-                        <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 2)"></span>
-                        <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 3)"></span>
-                    </div>
-                </div>
-                
+                </a>
                 <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
                     Contact Admin
                 </a>
@@ -826,7 +826,7 @@
             window.closeNav = closeNav;
 
 
-            // --- 3. Modal Logic (รวมสำหรับ Card เดิมและ Carousel) ---
+            // --- 3. Modal Logic (รวมสำหรับ Card เดิม) ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
@@ -862,18 +862,18 @@
                 let imageUrl = null;
                 let placeholder = null;
 
-                // 1. Logic สำหรับ Card 1, 2, 4, 5 (มี a.image-link > div.video-placeholder)
+                // Logic สำหรับ Card 1, 2, 4, 5: หา .video-placeholder ภายใน a.image-link
                 if (triggerElement.matches('.image-link')) {
+                    // สำหรับ Card 1, 2, 4, 5
                     placeholder = triggerElement.querySelector('.video-placeholder');
-                }
-                // 2. Logic สำหรับ Carousel (Card 3: คลิกจาก div.carousel-container)
-                else if (triggerElement.matches('.carousel-container')) {
-                    const carouselId = triggerElement.id;
-                    const carousel = carousels[carouselId];
                     
-                    if (carousel) {
-                         // placeholder คือ div.video-placeholder ที่กำลังแสดงอยู่ (อยู่ในตำแหน่ง slideIndex)
-                        placeholder = carousel.links[carousel.slideIndex]; 
+                    // สำหรับ Card 3 (Carousel): ต้องหา .video-placeholder ที่ active อยู่
+                    if (!placeholder) {
+                        const carouselContainer = triggerElement.querySelector('.carousel-container');
+                        const carousel = carousels[carouselContainer?.id];
+                        if (carousel) {
+                             placeholder = carousel.links[carousel.slideIndex]; 
+                        }
                     }
                 }
                 
@@ -922,6 +922,7 @@
                     return; 
                 }
 
+                // เลือกทั้ง .video-placeholder ปกติ และที่อยู่ใน carousel
                 const placeholders = document.querySelectorAll('.product-card .video-placeholder');
 
                 placeholders.forEach(placeholder => {
@@ -980,6 +981,7 @@
 
             function initializeCarousel(carouselId) {
                 const carouselElement = document.getElementById(carouselId);
+                // links คือ div.video-placeholder ภายใน carousel
                 const links = carouselElement.querySelectorAll('.carousel-images .video-placeholder'); 
                 const dots = carouselElement.querySelectorAll('.indicator-dot');
                 carousels[carouselId] = {
@@ -1028,46 +1030,35 @@
 
             // --- 7. Long Press (Long Click) Logic สำหรับเปิด img.html ---
             
-            // --- นำ Long Press ไปใช้กับ Card ปกติ (1, 2, 4, 5) ---
+            // --- นำ Long Press ไปใช้กับ Card ปกติ (1, 2, 4, 5) และ Card 3 ที่เป็น Carousel ---
             document.querySelectorAll('.image-link').forEach(link => {
                 const htmlUrl = link.href;
-                const placeholder = link.querySelector('.video-placeholder');
+                // placeholder อาจเป็น .video-placeholder หรือ .carousel-container (สำหรับ Card 3)
+                const placeholder = link.querySelector('.video-placeholder') || link.querySelector('.carousel-container'); 
                 
+                // ตรวจสอบว่าเป็น Card 3 ที่เราต้องการให้คลิกแล้วไปหน้า HTML ทันทีหรือไม่
+                const isCard3 = link.closest('.product-card').querySelector('#customThemeCarousel'); 
+
                 if(placeholder) {
+                    // กำหนด Long Press สำหรับทุก Card
                     setupLongPressListeners(placeholder, htmlUrl);
                 }
                 
-                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal)
+                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal/ไปหน้า HTML)
                 link.addEventListener('click', function(event) {
-                    event.preventDefault(); // ป้องกันการไป href ทันที
+                    if (isCard3) {
+                        // Card 3: ปล่อยให้คลิกทำงานตาม href="img-1.html" ปกติ
+                        if (pressTimer) { clearTimer(); } // ป้องกันการทำงานของ Long Press
+                        return; 
+                    }
+                    
+                    // Card อื่นๆ (1, 2, 4, 5): ป้องกันการไป href และเปิด Modal แทน
+                    event.preventDefault(); 
                     if (!pressTimer) { // ถ้าไม่มี timer (เป็นการคลิกสั้น)
                        window.openImageModal(link);
                     } 
                 });
             });
-            
-            // --- นำ Long Press ไปใช้กับ Carousel (Card 3) ---
-            const carouselContainer = document.getElementById('customThemeCarousel');
-            if (carouselContainer) {
-                
-                carouselContainer.querySelectorAll('.video-placeholder').forEach(placeholder => {
-                    const htmlUrl = placeholder.getAttribute('data-html-url');
-                    
-                    if (htmlUrl) {
-                        setupLongPressListeners(placeholder, htmlUrl);
-                    }
-                    
-                    // Logic สำหรับเปิด Modal ในกรณีคลิกสั้น
-                    placeholder.addEventListener('click', function(event) {
-                        event.stopPropagation(); // สำคัญมากใน carousel
-                        
-                        // ตรวจสอบว่าไม่ได้มาจากปุ่มเปลี่ยนสไลด์ และไม่ใช่ Long Press
-                        if (!pressTimer && !event.target.closest('.carousel-button')) { 
-                            window.openImageModal(carouselContainer);
-                        }
-                    });
-                });
-            }
 
         });
     </script>
