@@ -376,6 +376,15 @@
             pointer-events: auto; 
         }
 
+        /* เพิ่ม: สไตล์สำหรับปุ่มที่ถูกปิดการใช้งาน */
+        .carousel-button:disabled {
+            opacity: 0.3 !important;
+            cursor: default;
+            pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.5); /* เพื่อให้สีไม่เปลี่ยน */
+        }
+        /* จบการเพิ่ม */
+
         .carousel-button:hover {
             opacity: 1;
             background-color: rgba(0, 0, 0, 0.7);
@@ -1036,7 +1045,6 @@
                 modalCarouselImages.addEventListener('touchmove', handleModalTouchMove);
                 modalCarouselImages.addEventListener('touchend', handleModalTouchEnd);
             }
-            // *******************************************
 
 
             closeButtonFloat.addEventListener('click', closeModal);
@@ -1119,7 +1127,7 @@
             window.addEventListener('offline', updateConnectionStatus);
 
 
-            // --- 6. Carousel Logic (เพิ่ม Swipe) ---
+            // --- 6. Carousel Logic (แก้ไข: เพิ่มการจัดการปุ่มและขอบเขตการเลื่อน/Swipe) ---
             const carousels = {}; 
 
             function initializeCarousel(carouselId) {
@@ -1127,6 +1135,8 @@
                 const imagesContainer = carouselElement.querySelector('.carousel-images');
                 const links = carouselElement.querySelectorAll('.carousel-images .video-placeholder'); 
                 const dots = carouselElement.querySelectorAll('.indicator-dot');
+                const prevButton = carouselElement.querySelector('.carousel-button.prev');
+                const nextButton = carouselElement.querySelector('.carousel-button.next');
                 
                 carousels[carouselId] = {
                     slideIndex: 0,
@@ -1137,7 +1147,9 @@
                     imagesContainer: imagesContainer,
                     startX: 0, 
                     isSwiping: false,
-                    threshold: 50 
+                    threshold: 50,
+                    prevButton: prevButton, // เก็บปุ่ม
+                    nextButton: nextButton  // เก็บปุ่ม
                 };
                 
                 // เพิ่ม event listeners สำหรับ Swipe
@@ -1177,9 +1189,21 @@
 
                 if (carousel.isSwiping && Math.abs(diff) > carousel.threshold) {
                     if (diff > 0) {
-                        showSlides(carouselId, carousel.slideIndex + 1);
+                        // Swipe left (ไปรูปถัดไป) ถ้าไม่ได้อยู่ที่รูปสุดท้าย
+                        if (carousel.slideIndex < carousel.totalSlides - 1) {
+                            showSlides(carouselId, carousel.slideIndex + 1);
+                        } else {
+                            // อยู่รูปสุดท้ายแล้ว - ไม่ต้องทำอะไร
+                            showSlides(carouselId, carousel.slideIndex); 
+                        }
                     } else {
-                        showSlides(carouselId, carousel.slideIndex - 1);
+                        // Swipe right (ไปรูปก่อนหน้า) ถ้าไม่ได้อยู่ที่รูปแรก
+                        if (carousel.slideIndex > 0) {
+                            showSlides(carouselId, carousel.slideIndex - 1);
+                        } else {
+                            // อยู่รูปแรกแล้ว - ไม่ต้องทำอะไร
+                            showSlides(carouselId, carousel.slideIndex); 
+                        }
                     }
                 }
                 
@@ -1192,13 +1216,29 @@
                 const carousel = carousels[carouselId];
                 if (!carousel) return;
 
-                if (n >= carousel.totalSlides) { carousel.slideIndex = 0; }
-                else if (n < 0) { carousel.slideIndex = carousel.totalSlides - 1; }
-                else { carousel.slideIndex = n; }
+                // **ส่วนที่แก้ไข: ป้องกันการเลื่อนเกินขอบ**
+                let newIndex = n;
+                if (newIndex < 0) {
+                    newIndex = 0; // อยู่รูปแรก ห้ามย้อน
+                } else if (newIndex >= carousel.totalSlides) {
+                    newIndex = carousel.totalSlides - 1; // อยู่รูปสุดท้าย ห้ามไปต่อ
+                }
+                
+                carousel.slideIndex = newIndex;
+                
+                // **จัดการสถานะของปุ่ม**
+                carousel.prevButton.disabled = carousel.slideIndex === 0;
+                carousel.nextButton.disabled = carousel.slideIndex === carousel.totalSlides - 1;
 
+                // ปรับ opacity (สไตล์ CSS .carousel-button:disabled จัดการเรื่องนี้อยู่แล้ว)
+                carousel.prevButton.style.opacity = carousel.slideIndex === 0 ? '0.3' : '0.8';
+                carousel.nextButton.style.opacity = carousel.slideIndex === carousel.totalSlides - 1 ? '0.3' : '0.8';
+                
+                // **อัปเดต Dot Indicator**
                 carousel.dots.forEach(dot => dot.classList.remove('active')); 
                 carousel.dots[carousel.slideIndex].classList.add('active'); 
                 
+                // **เลื่อนภาพ**
                 carousel.imagesContainer.style.transform = `translateX(${-carousel.slideIndex * 100}%)`;
             }
 
