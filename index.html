@@ -587,7 +587,6 @@
         <section class="make-online-section">
             <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
             
-
             
             <p>
                 Customize your UI freely. <a 
@@ -987,7 +986,7 @@
                     imagesContainer: imagesContainer,
                     startX: 0, 
                     isSwiping: false, 
-                    hasSwiped: false, // NEW: ตรวจจับว่ามีการ Swipe เกิดขึ้นแล้วหรือไม่
+                    hasSwiped: false, 
                     threshold: 50 
                 };
                 
@@ -1003,7 +1002,7 @@
                 const carousel = carousels[carouselId];
                 carousel.startX = e.touches[0].clientX;
                 carousel.isSwiping = false; 
-                carousel.hasSwiped = false; // รีเซ็ตสถานะการลาก
+                carousel.hasSwiped = false; 
                 // หยุด timer ของ Long Press เมื่อเริ่ม TouchStart
                 clearTimer(); 
             }
@@ -1030,13 +1029,14 @@
                 const diff = carousel.startX - endX;
 
                 if (carousel.isSwiping && Math.abs(diff) > carousel.threshold) {
-                    // ถ้ามีการ Swipe จริง ๆ ให้ตั้งค่า hasSwiped เป็น true
+                    
+                    // *** แก้ไข: ป้องกันการเกิด Click event จาก Swipe ทันที ***
+                    e.preventDefault(); 
+                    
                     carousel.hasSwiped = true; 
                     if (diff > 0) {
-                        // Swipe left (ไปรูปถัดไป)
                         showSlides(carouselId, carousel.slideIndex + 1);
                     } else {
-                        // Swipe right (ไปรูปก่อนหน้า)
                         showSlides(carouselId, carousel.slideIndex - 1);
                     }
                 }
@@ -1045,11 +1045,10 @@
                 carousel.startX = 0;
                 carousel.isSwiping = false;
 
-                // หน่วงเวลา: เพื่อให้ Click Event (ที่เกิดหลังจาก Touchend) ทำงานในรอบถัดไป
-                // และ Logic ในส่วนที่ 7 ตรวจจับ hasSwiped ทัน
+                // เพิ่มระยะเวลา Timeout เป็น 200ms เพื่อให้แน่ใจว่า click event ถูกดักจับและยกเลิก
                 setTimeout(() => {
                     carousel.hasSwiped = false;
-                }, 100); 
+                }, 200); 
             }
 
 
@@ -1101,23 +1100,15 @@
                     
                     if (placeholder) {
                         
-                        event.preventDefault(); // ป้องกันการไป href ของ A
-
-                        // *** ตรวจสอบสถานะ Swipe ของ Carousel (Card 3 เท่านั้น) ***
-                        const carouselContainer = link.querySelector('.carousel-container');
-                        let isCarouselSwiped = false;
-                        if (carouselContainer) {
-                            const carousel = carousels[carouselContainer.id];
-                            if (carousel && carousel.hasSwiped) {
-                                isCarouselSwiped = true; 
-                            }
-                        }
+                        event.preventDefault(); // ป้องกันการไป href ของ A (สำคัญมาก)
                         
-                        // ถ้าไม่ใช่ Long Press และไม่ใช่การ Swipe ให้เปิด Modal
-                        if (!pressTimer && !isCarouselSwiped) { 
+                        // ถ้าไม่ใช่ Long Press ให้เปิด Modal
+                        // การ Swipe ถูกจัดการโดย event.preventDefault() ใน TouchEnd ของส่วนที่ 6 แล้ว
+                        if (!pressTimer) { 
                            window.openImageModal(link);
                         } else {
-                           clearTimer(); // ยกเลิก Long Press ที่กำลังจะเกิด
+                           // ถ้า pressTimer ยังรันอยู่ ให้ยกเลิก Long Press Timer
+                           clearTimer(); 
                         }
                     } 
                 });
