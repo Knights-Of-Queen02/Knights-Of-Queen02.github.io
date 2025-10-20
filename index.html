@@ -722,14 +722,15 @@
         &copy; 2024-2025 Knights Of Queen02 | All Rights Reserved
     </footer>
 
-    <script>
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             
             let scrollPosition = 0; 
             const LONG_PRESS_THRESHOLD = 500; // 500ms for long press
             let pressTimer;
             let currentLinkTarget = null;
-            
+            let isCarouselAction = false; // <--- NEW GLOBAL FLAG
+
             function clearTimer() {
                 if (pressTimer) {
                     clearTimeout(pressTimer);
@@ -756,6 +757,7 @@
                 element.addEventListener('mousedown', function(e) {
                     if (e.button !== 0) return; 
                     if (!navigator.onLine) return;
+                    if (isCarouselAction) return; // ไม่เริ่ม Long Press ขณะที่ Carousel กำลังทำงาน
 
                     currentLinkTarget = htmlUrl;
                     clearTimer();
@@ -764,6 +766,7 @@
 
                 element.addEventListener('touchstart', function(e) {
                     if (!navigator.onLine) return;
+                    if (isCarouselAction) return; // ไม่เริ่ม Long Press ขณะที่ Carousel กำลังทำงาน
                     e.stopPropagation(); 
                     
                     currentLinkTarget = htmlUrl;
@@ -1033,7 +1036,9 @@
                     // *** แก้ไข: ป้องกันการเกิด Click event จาก Swipe ทันที ***
                     e.preventDefault(); 
                     
-                    carousel.hasSwiped = true; 
+                    // NEW: ตั้ง Global Flag
+                    isCarouselAction = true; 
+                    
                     if (diff > 0) {
                         showSlides(carouselId, carousel.slideIndex + 1);
                     } else {
@@ -1045,10 +1050,10 @@
                 carousel.startX = 0;
                 carousel.isSwiping = false;
 
-                // เพิ่มระยะเวลา Timeout เป็น 200ms เพื่อให้แน่ใจว่า click event ถูกดักจับและยกเลิก
+                // เพิ่มระยะเวลา Timeout เพื่อให้แน่ใจว่า click event ถูกดักจับและยกเลิก
                 setTimeout(() => {
-                    carousel.hasSwiped = false;
-                }, 200); 
+                    isCarouselAction = false;
+                }, 250); 
             }
 
 
@@ -1102,8 +1107,14 @@
                         
                         event.preventDefault(); // ป้องกันการไป href ของ A (สำคัญมาก)
                         
+                        // *** NEW: ตรวจสอบ Global Flag เพื่อยกเลิกการคลิกที่มาจากการ Swipe ***
+                        if (isCarouselAction) {
+                            console.log("Click ignored: Carousel action detected.");
+                            // ไม่ต้องรีเซ็ต isCarouselAction เพราะมี setTimeout จัดการอยู่
+                            return; 
+                        }
+
                         // ถ้าไม่ใช่ Long Press ให้เปิด Modal
-                        // การ Swipe ถูกจัดการโดย event.preventDefault() ใน TouchEnd ของส่วนที่ 6 แล้ว
                         if (!pressTimer) { 
                            window.openImageModal(link);
                         } else {
@@ -1116,5 +1127,3 @@
 
         });
     </script>
-</body>
-</html>
