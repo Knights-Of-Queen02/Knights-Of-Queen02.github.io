@@ -38,29 +38,24 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             padding-top: 50px;
-            /* ลบ transition overflow เพื่อให้การคืนค่า scroll position ทันที */
         }
 
-        /* 💡 แก้ไข: ปรับ body.modal-open ให้รองรับการเลื่อนแบบมี offset */
         body.modal-open {
             overflow: hidden; 
-            position: fixed; /* ต้องใช้ fixed เพื่อไม่ให้เลื่อน */
+            position: fixed; 
             width: 100%;
         }
         
-        /* 💡 NEW: ปรับ body.menu-open เมื่อ sidebar เปิด */
         body.menu-open {
             overflow: hidden;
         }
-
-        /* [ถูกลบ] CSS สำหรับ body.internet-offline (ตามที่ร้องขอในรอบก่อน) */
 
         .container {
             max-width: 100%;
             padding: 0;
         }
 
-        /* --- 1. ส่วน Navigation Bar (เดิม) --- */
+        /* --- 1. ส่วน Navigation Bar --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -85,7 +80,6 @@
             line-height: 1.2;
         }
 
-        /* CSS สำหรับ Wavy Text Animation */
         #typing-text {
             display: flex; 
             flex-wrap: nowrap;
@@ -117,20 +111,20 @@
             color: var(--text-dark);
         }
 
-        /* --- 5. ส่วน Sidebar/Menu ใหม่ --- */
+        /* --- 5. ส่วน Sidebar/Menu --- */
         .sidebar {
-            height: 100%; /* เต็มความสูง */
-            width: 0; /* ซ่อนไว้เริ่มต้น */
+            height: 100%; 
+            width: 0; 
             position: fixed;
-            z-index: 1000; /* อยู่ด้านบนสุด */
+            z-index: 1000; 
             top: 0;
             right: 0;
             background-color: var(--card-bg); 
             overflow-x: hidden; 
             transition: 0.3s; 
-            padding-top: 60px; /* เว้นที่ว่างสำหรับ navbar */
+            padding-top: 60px; 
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            touch-action: manipulation; /* ป้องกันการเลื่อนที่ไม่ต้องการ */
+            touch-action: manipulation; 
         }
 
         .sidebar a {
@@ -155,14 +149,13 @@
             right: 15px;
             font-size: 36px;
             margin-left: 50px;
-            line-height: 50px; /* จัดให้อยู่ตรงกลาง navbar */
+            line-height: 50px; 
             color: var(--text-dark);
-            border-bottom: none; /* ลบเส้นใต้ออก */
+            border-bottom: none; 
         }
 
-        /* แสดงเมนูเมื่อมีคลาส active */
         .sidebar.active {
-            width: 250px; /* ความกว้างของเมนูเมื่อเปิด */
+            width: 250px; 
         }
         
         @media screen and (min-width: 600px) {
@@ -172,7 +165,7 @@
         }
 
 
-        /* --- 2. ส่วน Make online (เดิม) --- */
+        /* --- 2. ส่วน Make online --- */
         .make-online-section {
             background-color: var(--dark-blue);
             color: var(--text-light);
@@ -216,7 +209,7 @@
             margin-top: 10px;
         }
 
-        /* --- 3. ส่วน Card รายการ (เดิม) --- */
+        /* --- 3. ส่วน Card รายการ --- */
         .content-section {
             padding: 0 10px;
         }
@@ -251,7 +244,6 @@
             cursor: pointer; 
         }
 
-        /* 💡 Video Placeholder Base (Skeleton พื้นหลัง) */
         .video-placeholder {
             width: 100%;
             padding-top: 56.25%; 
@@ -265,7 +257,6 @@
             cursor: pointer; 
         }
         
-        /* 💡 รูปภาพจริง (ซ่อนเมื่อ Loading) */
         .video-placeholder img {
             position: absolute;
             top: 0;
@@ -277,7 +268,6 @@
             transition: opacity 0.5s ease; 
         }
         
-        /* 💡 Shimmer Effect Animation */
         .video-placeholder.loading::after {
             content: "";
             position: absolute;
@@ -301,7 +291,6 @@
             }
         }
 
-        /* 💡 เมื่อภาพโหลดเสร็จ (JS จะเพิ่ม class 'loaded') */
         .video-placeholder.loaded img {
             opacity: 1; 
         }
@@ -309,7 +298,6 @@
             content: none; 
         }
         
-        /* เมื่อออฟไลน์ จะบังคับให้แสดงสถานะ Loading */
         body.internet-offline .video-placeholder {
             cursor: default; 
         }
@@ -324,7 +312,97 @@
         }
 
 
-        /* ปุ่ม Contact Admin (เดิม) */
+        /* NEW: Carousel Styles */
+        .carousel-container {
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 0 auto 20px;
+            background-color: var(--border-color); 
+        }
+
+        .carousel-images {
+            display: flex;
+            /* 💡 เพิ่มอนิเมชั่นให้การเลื่อนรูปภาพสมูท */
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth animation */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0; 
+            display: block; 
+            cursor: pointer; /* ให้คลิกเพื่อเปิด Modal ได้ */
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-button:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .carousel-button.prev {
+            left: 10px;
+        }
+
+        .carousel-button.next {
+            right: 10px;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        /* End NEW Carousel Styles */
+
+
+        /* ปุ่ม Contact Admin --- */
         .submit-button {
             width: 100%;
             padding: 12px 15px;
@@ -352,7 +430,7 @@
             outline: none;                    
         }
         
-        /* --- Modal Styles (เดิม) --- */
+        /* --- Modal Styles --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -437,7 +515,6 @@
             display: flex;
         }
 
-        /* ปุ่ม X ที่ไม่มีวงกลม */
         .control-button {
             color: var(--modal-close-color); 
             font-weight: 300;
@@ -466,7 +543,7 @@
             padding: 5px 10px; 
         }
         
-        /* --- 4. ส่วน Footer (เดิม) --- */
+        /* --- 4. ส่วน Footer --- */
         .footer-section {
             background-color: var(--footer-bg);
             color: var(--bg-light); 
@@ -539,6 +616,65 @@
                 </a>
             </div>
 
+            <div class="product-card">
+                <div class="tag-capsule">NEW: Custom Theme (200 ฿)</div>
+                
+                <div class="carousel-container" id="customThemeCarousel">
+                    <div class="carousel-images">
+                        <img src="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" alt="Custom Theme Image 1" 
+                             data-modal-image="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png"
+                             onclick="openModalFromCarousel('customThemeCarousel', this)">
+                        
+                        <img src="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" alt="Custom Theme Image 2"
+                             data-modal-image="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png"
+                             onclick="openModalFromCarousel('customThemeCarousel', this)">
+                        
+                        <img src="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" alt="Custom Theme Image 3"
+                             data-modal-image="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png"
+                             onclick="openModalFromCarousel('customThemeCarousel', this)">
+                    </div>
+                    <button class="carousel-button prev" onclick="moveCarousel('customThemeCarousel', -1)">&#10094;</button>
+                    <button class="carousel-button next" onclick="moveCarousel('customThemeCarousel', 1)">&#10095;</button>
+                    <div class="carousel-indicators">
+                        <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
+                        <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 2)"></span>
+                        <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 3)"></span>
+                    </div>
+                </div>
+                
+                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
+                    Contact Admin
+                </a>
+            </div>
+            
+            <div class="product-card">
+                <div class="tag-capsule">Script Feature (100 ฿)</div>
+                
+                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png"> 
+                        <img src="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png" alt="Script Feature Preview 4">
+                    </div>
+                </a>
+                
+                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
+                    Contact Admin
+                </a>
+            </div>
+            
+            <div class="product-card">
+                <div class="tag-capsule">Optimization Service (400 ฿)</div>
+                
+                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png"> 
+                        <img src="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png" alt="Optimization Service Preview 5">
+                    </div>
+                </a>
+                
+                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
+                    Contact Admin
+                </a>
+            </div>
+
         </section>
     </div>
 
@@ -579,12 +715,11 @@
             }
             initializeWavyText(targetText);
             
-            // --- 2. NEW: Sidebar Menu Functions ---
+            // --- 2. Sidebar Menu Functions ---
             const sidebar = document.getElementById("mySidebar");
             const body = document.body;
             
             function openNav() {
-                // ปิด Modal หากเปิดอยู่
                 if (imageModal.classList.contains('active')) {
                     closeModal();
                 }
@@ -598,12 +733,11 @@
                 body.classList.remove('menu-open');
             }
             
-            // 💡 กำหนดให้ฟังก์ชันเข้าถึงได้จากนอก DOMContentLoaded
             window.openNav = openNav;
             window.closeNav = closeNav;
 
 
-            // --- 3. Modal Logic (ปรับปรุง Scroll) ---
+            // --- 3. Modal Logic ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
@@ -611,59 +745,80 @@
             function closeModal() {
                 imageModal.classList.remove('active');
                 
-                // 💡 กู้คืนตำแหน่งการเลื่อน
                 document.body.classList.remove('modal-open');
-                document.body.style.top = ''; // ลบ offset top ออก
-                window.scrollTo(0, scrollPosition); // เลื่อนกลับไปยังตำแหน่งที่บันทึกไว้
+                document.body.style.top = ''; 
+                window.scrollTo(0, scrollPosition); 
                 
                 setTimeout(() => {
                     modalImage.src = ''; 
                 }, 300); 
             }
 
+            // Function สำหรับ Card เดิม (video-placeholder)
             window.openImageModal = function(linkElement) {
                 if (!navigator.onLine) {
                     console.log("Cannot open modal while offline.");
                     return; 
                 }
 
-                // ปิด Sidebar หากเปิดอยู่
                 if (sidebar.classList.contains('active')) {
                     closeNav();
                 }
 
                 const placeholder = linkElement.querySelector('.video-placeholder');
-                if (placeholder) {
-                    if (placeholder.classList.contains('loaded')) { 
-                        const imageUrl = placeholder.getAttribute('data-image');
-                        if (imageUrl) {
-                            
-                            // 💡 บันทึกตำแหน่งการเลื่อนก่อนเปิด Modal
-                            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                            
-                            modalImage.src = imageUrl;
-                            imageModal.classList.add('active');
-                            
-                            // 💡 ใช้ Style top เพื่อชดเชยการเลื่อนเมื่อ body เป็น fixed
-                            document.body.style.top = `-${scrollPosition}px`;
-                            document.body.classList.add('modal-open'); 
-                        }
-                    } else {
-                        console.log("Image is still loading, cannot open modal yet.");
+                if (placeholder && placeholder.classList.contains('loaded')) { 
+                    const imageUrl = placeholder.getAttribute('data-image');
+                    if (imageUrl) {
+                        
+                        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                        modalImage.src = imageUrl;
+                        imageModal.classList.add('active');
+                        document.body.style.top = `-${scrollPosition}px`;
+                        document.body.classList.add('modal-open'); 
                     }
+                } else {
+                    console.log("Image is still loading, cannot open modal yet.");
                 }
             }
+            
+            // Function สำหรับ Carousel NEW
+            window.openModalFromCarousel = function(carouselId, clickedImage) {
+                if (!navigator.onLine) {
+                    console.log("Cannot open modal while offline.");
+                    return; 
+                }
+
+                const carousel = carousels[carouselId];
+                if (!carousel) return;
+
+                // ตรวจสอบว่ารูปที่คลิกคือรูปที่กำลังแสดงอยู่หรือไม่
+                if (clickedImage !== carousel.images[carousel.slideIndex]) {
+                    return; 
+                }
+
+                const imageUrl = clickedImage.getAttribute('data-modal-image');
+                if (imageUrl) {
+                    if (sidebar.classList.contains('active')) {
+                        closeNav();
+                    }
+                    
+                    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                    modalImage.src = imageUrl;
+                    imageModal.classList.add('active');
+                    document.body.style.top = `-${scrollPosition}px`;
+                    document.body.classList.add('modal-open'); 
+                }
+            }
+
 
             closeButtonFloat.addEventListener('click', closeModal);
             
 
             document.addEventListener('keydown', function(e) {
                 if (e.key === "Escape") {
-                    // ปิด Modal ก่อน
                     if (imageModal.classList.contains('active')) {
                         closeModal();
                     } 
-                    // ปิด Sidebar ทีหลัง
                     else if (sidebar.classList.contains('active')) {
                         closeNav();
                     }
@@ -720,7 +875,6 @@
                 } else {
                     document.body.classList.add('internet-offline');
                     console.log("Internet: Offline. Images revert to Loading state.");
-                    // ปิด Modal และ Sidebar เมื่อออฟไลน์
                     if (imageModal.classList.contains('active')) {
                         closeModal();
                     }
@@ -733,6 +887,58 @@
             updateConnectionStatus();
             window.addEventListener('online', updateConnectionStatus);
             window.addEventListener('offline', updateConnectionStatus);
+
+
+            // --- NEW: Carousel Logic ---
+            const carousels = {}; 
+
+            function initializeCarousel(carouselId) {
+                const carouselElement = document.getElementById(carouselId);
+                const images = carouselElement.querySelectorAll('.carousel-images img');
+                const dots = carouselElement.querySelectorAll('.indicator-dot');
+                carousels[carouselId] = {
+                    slideIndex: 0,
+                    images: images,
+                    dots: dots,
+                    totalSlides: images.length
+                };
+                showSlides(carouselId, 0); 
+            }
+
+            function showSlides(carouselId, n) {
+                const carousel = carousels[carouselId];
+                if (!carousel) return;
+
+                if (n >= carousel.totalSlides) { carousel.slideIndex = 0; }
+                else if (n < 0) { carousel.slideIndex = carousel.totalSlides - 1; }
+                else { carousel.slideIndex = n; }
+
+                carousel.dots.forEach(dot => dot.classList.remove('active')); 
+                carousel.dots[carousel.slideIndex].classList.add('active'); 
+                
+                const carouselImagesContainer = document.getElementById(carouselId).querySelector('.carousel-images');
+                if (carouselImagesContainer) {
+                    // ใช้ translateX เพื่อเลื่อนอย่างสมูท (CSS transition จัดการความนุ่มนวล)
+                    carouselImagesContainer.style.transform = `translateX(${-carousel.slideIndex * 100}%)`;
+                }
+            }
+
+            window.moveCarousel = function(carouselId, n) {
+                const carousel = carousels[carouselId];
+                if (carousel) {
+                    showSlides(carouselId, carousel.slideIndex + n);
+                }
+            }
+
+            window.currentSlide = function(carouselId, n) {
+                const carousel = carousels[carouselId];
+                if (carousel) {
+                    showSlides(carouselId, n - 1); // n is 1-based, index is 0-based
+                }
+            }
+
+            // Initialize the "Custom Theme" carousel on page load
+            initializeCarousel('customThemeCarousel');
 
         });
     </script>
