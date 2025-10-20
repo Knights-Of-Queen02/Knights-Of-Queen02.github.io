@@ -587,6 +587,7 @@
         <section class="make-online-section">
             <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
             
+            <h1>KNIGHTS OF QUEEN02</h1>
             
             <p>
                 Customize your UI freely. <a 
@@ -632,7 +633,12 @@
             <div class="product-card">
                 <div class="tag-capsule">Make Menu Free Fire (2222 ฿)</div>
                 
-                <a href="img-1.html" class="image-link" target="_blank"> 
+                <div 
+                    class="image-link" 
+                    data-html-url="img-1.html" 
+                    data-is-carousel="true"
+                    target="_blank"
+                > 
                     <div class="carousel-container" id="customThemeCarousel">
                         <div class="carousel-images">
                             
@@ -659,8 +665,8 @@
                             
                         </div>
                         
-                        <button class="carousel-button prev" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', -1)">&#10094;</button>
-                        <button class="carousel-button next" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', 1)">&#10095;</button>
+                        <button class="carousel-button prev" onclick="moveCarousel('customThemeCarousel', -1)">&#10094;</button>
+                        <button class="carousel-button next" onclick="moveCarousel('customThemeCarousel', 1)">&#10095;</button>
                         
                         <div class="carousel-indicators">
                             <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
@@ -668,7 +674,7 @@
                             <span class="indicator-dot" onclick="currentSlide('customThemeCarousel', 3)"></span>
                         </div>
                     </div>
-                </a>
+                </div>
                 
                 <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
                     Contact Admin
@@ -722,14 +728,13 @@
         &copy; 2024-2025 Knights Of Queen02 | All Rights Reserved
     </footer>
 
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             
             let scrollPosition = 0; 
             const LONG_PRESS_THRESHOLD = 500; // 500ms for long press
             let pressTimer;
             let currentLinkTarget = null;
-            let isCarouselAction = false; // <--- NEW GLOBAL FLAG
 
             function clearTimer() {
                 if (pressTimer) {
@@ -744,6 +749,7 @@
                 if (currentLinkTarget) {
                     console.log("Long press detected. Opening:", currentLinkTarget);
                     
+                    // Note: สำหรับ Card ที่ 3 (DIV) เราต้องเปิดลิงก์ด้วย JS แทน
                     window.open(currentLinkTarget, '_blank');
                     currentLinkTarget = null; 
                     
@@ -757,7 +763,6 @@
                 element.addEventListener('mousedown', function(e) {
                     if (e.button !== 0) return; 
                     if (!navigator.onLine) return;
-                    if (isCarouselAction) return; // ไม่เริ่ม Long Press ขณะที่ Carousel กำลังทำงาน
 
                     currentLinkTarget = htmlUrl;
                     clearTimer();
@@ -766,8 +771,12 @@
 
                 element.addEventListener('touchstart', function(e) {
                     if (!navigator.onLine) return;
-                    if (isCarouselAction) return; // ไม่เริ่ม Long Press ขณะที่ Carousel กำลังทำงาน
-                    e.stopPropagation(); 
+                    
+                    // ** NEW: Card 3 (Carousel) ต้องไม่ให้ event.stopPropagation() เพื่อให้ swipe ทำงานได้ **
+                    const isCarousel = element.classList.contains('carousel-container');
+                    if (!isCarousel) {
+                        e.stopPropagation(); 
+                    }
                     
                     currentLinkTarget = htmlUrl;
                     clearTimer();
@@ -971,7 +980,7 @@
             window.addEventListener('offline', updateConnectionStatus);
 
 
-            // --- 6. Carousel Logic (พร้อมแก้ปัญหา Swipe ใน A tag) ---
+            // --- 6. Carousel Logic (ปรับปรุงสำหรับ Card 3 ที่เป็น DIV) ---
             const carousels = {}; 
 
             function initializeCarousel(carouselId) {
@@ -994,6 +1003,7 @@
                 };
                 
                 // เพิ่ม event listeners สำหรับ Swipe
+                // เนื่องจาก Carousel ไม่ได้อยู่ใน A tag แล้ว การ Swipe จะไม่เด้งไปลิงก์อีกต่อไป
                 imagesContainer.addEventListener('touchstart', (e) => handleTouchStart(e, carouselId));
                 imagesContainer.addEventListener('touchmove', (e) => handleTouchMove(e, carouselId));
                 imagesContainer.addEventListener('touchend', (e) => handleTouchEnd(e, carouselId));
@@ -1005,7 +1015,6 @@
                 const carousel = carousels[carouselId];
                 carousel.startX = e.touches[0].clientX;
                 carousel.isSwiping = false; 
-                carousel.hasSwiped = false; 
                 // หยุด timer ของ Long Press เมื่อเริ่ม TouchStart
                 clearTimer(); 
             }
@@ -1030,14 +1039,11 @@
 
                 const endX = e.changedTouches[0].clientX;
                 const diff = carousel.startX - endX;
-
+                
                 if (carousel.isSwiping && Math.abs(diff) > carousel.threshold) {
                     
-                    // *** แก้ไข: ป้องกันการเกิด Click event จาก Swipe ทันที ***
+                    // ป้องกันการเกิด click/long press จากการลาก (Swipe)
                     e.preventDefault(); 
-                    
-                    // NEW: ตั้ง Global Flag
-                    isCarouselAction = true; 
                     
                     if (diff > 0) {
                         showSlides(carouselId, carousel.slideIndex + 1);
@@ -1049,11 +1055,6 @@
                 // รีเซ็ตค่า
                 carousel.startX = 0;
                 carousel.isSwiping = false;
-
-                // เพิ่มระยะเวลา Timeout เพื่อให้แน่ใจว่า click event ถูกดักจับและยกเลิก
-                setTimeout(() => {
-                    isCarouselAction = false;
-                }, 250); 
             }
 
 
@@ -1091,8 +1092,12 @@
             // --- 7. Long Press (Long Click) & Short Click Logic (สำหรับ Modal/HTML) ---
             
             document.querySelectorAll('.image-link').forEach(link => {
-                const htmlUrl = link.href;
+                // สำหรับ Card 1, 2, 4, 5 (A tag), htmlUrl = link.href
+                // สำหรับ Card 3 (DIV), htmlUrl = data-html-url
+                const htmlUrl = link.href || link.getAttribute('data-html-url'); 
+                
                 // placeholder คือตัวที่ใช้ตรวจจับ Long Press/Click
+                // สำหรับ Card 3, มันคือ div.carousel-container
                 const placeholder = link.querySelector('.video-placeholder') || link.querySelector('.carousel-container'); 
                 
                 if(placeholder && htmlUrl) {
@@ -1105,16 +1110,12 @@
                     
                     if (placeholder) {
                         
-                        event.preventDefault(); // ป้องกันการไป href ของ A (สำคัญมาก)
-                        
-                        // *** NEW: ตรวจสอบ Global Flag เพื่อยกเลิกการคลิกที่มาจากการ Swipe ***
-                        if (isCarouselAction) {
-                            console.log("Click ignored: Carousel action detected.");
-                            // ไม่ต้องรีเซ็ต isCarouselAction เพราะมี setTimeout จัดการอยู่
-                            return; 
+                        // ถ้าเป็น A tag (Card 1, 2, 4, 5) ต้องป้องกันการเด้งไปลิงก์ทันที
+                        if (link.tagName === 'A') {
+                            event.preventDefault(); 
                         }
-
-                        // ถ้าไม่ใช่ Long Press ให้เปิด Modal
+                        
+                        // ถ้าไม่ใช่ Long Press ให้เปิด Modal (ใช้ได้กับทุก Card)
                         if (!pressTimer) { 
                            window.openImageModal(link);
                         } else {
@@ -1127,3 +1128,5 @@
 
         });
     </script>
+</body>
+</html>
