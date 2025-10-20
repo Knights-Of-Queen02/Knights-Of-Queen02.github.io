@@ -6,7 +6,7 @@
     <title>Knights-Of-Queen02</title>
 
     <link rel="shortcut icon" href="B6BB28C0-F7E4-4302-8CA9-158B5735C62A.gif" sizes="32x32" type="image/x-icon">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- ตัวแปรและรีเซ็ต --- */
@@ -251,11 +251,13 @@
             height: 0;
             background-color: var(--border-color); 
             border-radius: 8px;
-            margin-bottom: 20px; /* สำหรับ Card ปกติ */
+            /* **[แก้ไข]** ลบ margin-bottom ออก เพื่อให้ปุ่มถูกจัดระยะโดย .submit-button แทน */
             position: relative;
             overflow: hidden; 
-            margin: 0 auto; /* สำหรับ Card ปกติ */
+            margin: 0 auto 0 auto;
             cursor: pointer; 
+            /* เพิ่ม touch-action: none; เพื่อช่วยเรื่อง Long Press บนมือถือ */
+            touch-action: manipulation; 
         }
         
         /* แก้ margin-bottom สำหรับ video-placeholder ที่อยู่ใน carousel */
@@ -328,7 +330,8 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            margin: 0 auto 20px;
+            /* **[แก้ไข]** ลบ margin-bottom ออก */
+            margin: 0 auto; 
             background-color: var(--border-color); 
         }
 
@@ -408,6 +411,8 @@
 
         /* ปุ่ม Contact Admin --- */
         .submit-button {
+            /* **[แก้ไข]** เพิ่ม margin-top เพื่อสร้างช่องว่างด้านบนที่สม่ำเสมอ */
+            margin-top: 20px;
             width: 100%;
             padding: 12px 15px;
             background-color: var(--bg-light); 
@@ -534,24 +539,6 @@
             font-size: 28px;
             transition: color 0.2s; 
         }
-        
-        /* สไตล์สำหรับปุ่ม View Detail */
-        #viewDetailButton {
-            font-size: 16px !important; 
-            margin-right: 15px; 
-            border: 1px solid white; 
-            padding: 5px 15px !important; 
-            border-radius: 5px; 
-            background-color: rgba(255, 255, 255, 0.2); 
-            transition: background-color 0.3s;
-            line-height: 1.5; /* เพื่อให้ข้อความอยู่ตรงกลาง */
-        }
-        
-        #viewDetailButton:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-            color: var(--text-dark);
-        }
-
 
         .control-button:hover {
             background-color: transparent; 
@@ -612,9 +599,9 @@
         <section class="content-section">
 
             <div class="product-card"> 
-                <div class="tag-capsule">Control Panel Update (250 ฿ / 1 Month)</div>
+                <div class="tag-capsule">Control Panel Update (Unknown ฿ / 1 Month)</div>
                 
-                <a href="img-cp.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-cp.html" class="image-link" target="_blank">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png">
                         <img src="https://i.postimg.cc/CMC1xzPr/E4647-DA9-C4-B0-42-FE-AB94-C566030-B8-F95.png" alt="Multi Color FPS Preview"> 
                     </div>
@@ -628,7 +615,7 @@
             <div class="product-card">
                 <div class="tag-capsule">Make Menu (150 ฿)</div>
                 
-                <a href="img-menu.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
+                <a href="img-menu.html" class="image-link" target="_blank">
                     <div class="video-placeholder loading" data-image="https://i.postimg.cc/QNfhcQMz/73692948-18-E3-4211-A3-A4-5590-D81-F42-C2.png">
                         <img src="https://i.postimg.cc/QNfhcQMz/73692948-18-E3-4211-A3-A4-5590-D81-F42-C2.png" alt="White Color FPS Preview">
                     </div>
@@ -640,36 +627,33 @@
             </div>
 
             <div class="product-card">
-                <div class="tag-capsule">NEW: Custom Theme (200 ฿)</div>
+                <div class="tag-capsule">Make Menu Free Fire (2222 ฿)</div>
                 
                 <div class="carousel-container" id="customThemeCarousel">
                     <div class="carousel-images">
                         
                         <div 
                             class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/26K1V2h7/placeholder-theme-3.png" 
+                            data-image="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" 
                             data-html-url="img-1.html" 
-                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
-                        > 
-                             <img src="https://i.postimg.cc/26K1V2h7/placeholder-theme-3.png" alt="Custom Theme Image 1">
+                            > 
+                             <img src="https://i.postimg.cc/76KPYN6k/18151183-1-F2-C-4762-9-D25-8516-B6-EFD1-BE.png" alt="Custom Theme Image 1">
                         </div>
                         
                         <div 
                             class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/pr09X62g/placeholder-theme-2.png" 
+                            data-image="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" 
                             data-html-url="img-2.html" 
-                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
-                        >
-                             <img src="https://i.postimg.cc/pr09X62g/placeholder-theme-2.png" alt="Custom Theme Image 2">
+                            >
+                             <img src="https://i.postimg.cc/vBZMj6vq/4-EA5-DFC9-224-A-4076-ADD5-A5-FE08-F855-F8.png" alt="Custom Theme Image 2">
                         </div>
                         
                         <div 
                             class="video-placeholder loading" 
-                            data-image="https://i.postimg.cc/MGpQ150F/placeholder-theme-1.png" 
+                            data-image="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" 
                             data-html-url="img-3.html" 
-                            onclick="event.stopPropagation(); openImageModal(this.parentElement.parentElement);"
-                        >
-                             <img src="https://i.postimg.cc/MGpQ150F/placeholder-theme-1.png" alt="Custom Theme Image 3">
+                            >
+                             <img src="https://i.postimg.cc/GpQdqjv8/CE010-E69-E336-49-E6-8-B48-4427-F5-FF9-B2-A.png" alt="Custom Theme Image 3">
                         </div>
                         
                     </div>
@@ -690,11 +674,11 @@
             </div>
             
             <div class="product-card">
-                <div class="tag-capsule">Script Feature (100 ฿)</div>
+                <div class="tag-capsule">Server Key (350 ฿ / 1 Month)</div>
                 
-                <a href="img-script.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png"> 
-                        <img src="https://i.postimg.cc/Qx7n3JbC/placeholder-script-4.png" alt="Script Feature Preview 4">
+                <a href="img-script.html" class="image-link" target="_blank">
+                    <div class="video-placeholder loading" data-image="https//:;url4.png"> 
+                        <img src="https//:;url4.png" alt="Script Feature Preview 4">
                     </div>
                 </a>
                 
@@ -704,11 +688,11 @@
             </div>
             
             <div class="product-card">
-                <div class="tag-capsule">Optimization Service (400 ฿)</div>
+                <div class="tag-capsule">Custom Menu Objective-C (3333 ฿)</div>
                 
-                <a href="img-opti.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png"> 
-                        <img src="https://i.postimg.cc/G21hYfGz/placeholder-optimization-5.png" alt="Optimization Service Preview 5">
+                <a href="img-opti.html" class="image-link" target="_blank">
+                    <div class="video-placeholder loading" data-image="https://img4.png"> 
+                        <img src="https://img4.png" alt="Optimization Service Preview 5">
                     </div>
                 </a>
                 
@@ -722,9 +706,6 @@
 
     <div id="imageModal" class="modal-overlay">
         <div class="control-buttons-container">
-            <button id="viewDetailButton" class="control-button" style="display: none;">
-                View Detail &rarr;
-            </button>
             <span class="control-button close-button-float" id="closeButtonFloat">&times;</span> 
         </div>
 
@@ -743,6 +724,69 @@
         document.addEventListener('DOMContentLoaded', function() {
             
             let scrollPosition = 0; 
+            const LONG_PRESS_THRESHOLD = 500; // 500ms for long press
+            let pressTimer;
+            let currentLinkTarget = null;
+            
+            function clearTimer() {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            }
+
+            function handleLongPress(event) {
+                // หยุดการทำงานของ Modal/Click สั้น
+                clearTimer(); 
+                
+                // ตรวจสอบว่าเป็น Long Press จาก trigger Element ที่ถูกต้องหรือไม่
+                if (currentLinkTarget) {
+                    console.log("Long press detected. Opening:", currentLinkTarget);
+                    window.open(currentLinkTarget, '_blank');
+                    currentLinkTarget = null; // รีเซ็ต
+                    
+                    // ป้องกันการทำงานของ touchstart/mousedown ซ้ำ
+                    event.stopPropagation(); 
+                    event.preventDefault(); 
+                }
+            }
+            
+            function setupLongPressListeners(element, htmlUrl) {
+                
+                // ตรวจจับ mousedown/touchstart 
+                element.addEventListener('mousedown', function(e) {
+                    if (e.button !== 0) return; 
+                    if (!navigator.onLine) return;
+
+                    currentLinkTarget = htmlUrl;
+                    clearTimer();
+                    pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
+                });
+
+                element.addEventListener('touchstart', function(e) {
+                    if (!navigator.onLine) return;
+                    e.stopPropagation(); 
+                    
+                    currentLinkTarget = htmlUrl;
+                    clearTimer();
+                    pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
+                });
+                
+                // ตรวจจับ mouseup/touchend/mouseleave/touchcancel 
+                element.addEventListener('mouseup', function(e) {
+                    clearTimer();
+                });
+                element.addEventListener('touchend', function(e) {
+                    clearTimer();
+                });
+                element.addEventListener('mouseleave', function(e) {
+                    clearTimer();
+                });
+                element.addEventListener('touchcancel', function(e) {
+                    clearTimer();
+                });
+            }
+
 
             // --- 1. Wavy Text Initialization Logic (เดิม) ---
             const textElement = document.getElementById('typing-text');
@@ -786,15 +830,9 @@
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
-            // 💡 เพิ่มการเรียกตัวแปรสำหรับปุ่มใหม่
-            const viewDetailButton = document.getElementById('viewDetailButton'); 
             
             function closeModal() {
                 imageModal.classList.remove('active');
-                
-                // 💡 Reset ปุ่มเมื่อปิด Modal
-                viewDetailButton.style.display = 'none'; 
-                viewDetailButton.onclick = null; 
                 
                 document.body.classList.remove('modal-open');
                 document.body.style.top = ''; 
@@ -811,6 +849,11 @@
                     console.log("Cannot open modal while offline.");
                     return; 
                 }
+                if (pressTimer) {
+                    // ถ้ากำลังกดค้างอยู่ ให้ยกเลิกการเปิด Modal
+                    clearTimer(); 
+                    return;
+                }
 
                 if (sidebar.classList.contains('active')) {
                     closeNav();
@@ -818,12 +861,10 @@
 
                 let imageUrl = null;
                 let placeholder = null;
-                let htmlUrl = null; 
 
                 // 1. Logic สำหรับ Card 1, 2, 4, 5 (มี a.image-link > div.video-placeholder)
                 if (triggerElement.matches('.image-link')) {
                     placeholder = triggerElement.querySelector('.video-placeholder');
-                    htmlUrl = triggerElement.href; 
                 }
                 // 2. Logic สำหรับ Carousel (Card 3: คลิกจาก div.carousel-container)
                 else if (triggerElement.matches('.carousel-container')) {
@@ -833,7 +874,6 @@
                     if (carousel) {
                          // placeholder คือ div.video-placeholder ที่กำลังแสดงอยู่ (อยู่ในตำแหน่ง slideIndex)
                         placeholder = carousel.links[carousel.slideIndex]; 
-                        htmlUrl = placeholder.getAttribute('data-html-url'); 
                     }
                 }
                 
@@ -851,16 +891,6 @@
                     imageModal.classList.add('active');
                     document.body.style.top = `-${scrollPosition}px`;
                     document.body.classList.add('modal-open'); 
-                    
-                    // 💡 ตั้งค่าปุ่ม View Detail
-                    if (htmlUrl) {
-                        viewDetailButton.style.display = 'block';
-                        viewDetailButton.onclick = function() {
-                            window.open(htmlUrl, '_blank'); 
-                        };
-                    } else {
-                        viewDetailButton.style.display = 'none';
-                    }
                 } 
             }
 
@@ -892,17 +922,14 @@
                     return; 
                 }
 
-                // โหลดรูปภาพทั้งหมด: ทั้งใน video-placeholder (Card ปกติ) และใน Carousel
                 const placeholders = document.querySelectorAll('.product-card .video-placeholder');
 
                 placeholders.forEach(placeholder => {
-                    // กำหนด element img ที่อยู่ภายใน
                     const img = placeholder.querySelector('img'); 
                     
                     placeholder.classList.add('loading');
                     placeholder.classList.remove('loaded');
                     
-                    // ใช้ data-image เป็น source
                     const imageSource = placeholder.getAttribute('data-image');
 
                     if (img.complete && img.src === imageSource) {
@@ -953,7 +980,6 @@
 
             function initializeCarousel(carouselId) {
                 const carouselElement = document.getElementById(carouselId);
-                // links คือ div.video-placeholder
                 const links = carouselElement.querySelectorAll('.carousel-images .video-placeholder'); 
                 const dots = carouselElement.querySelectorAll('.indicator-dot');
                 carousels[carouselId] = {
@@ -978,7 +1004,6 @@
                 
                 const carouselImagesContainer = document.getElementById(carouselId).querySelector('.carousel-images');
                 if (carouselImagesContainer) {
-                    // ใช้ translateX เพื่อเลื่อนอย่างสมูท (CSS transition จัดการความนุ่มนวล)
                     carouselImagesContainer.style.transform = `translateX(${-carousel.slideIndex * 100}%)`;
                 }
             }
@@ -993,12 +1018,56 @@
             window.currentSlide = function(carouselId, n) {
                 const carousel = carousels[carouselId];
                 if (carousel) {
-                    showSlides(carouselId, n - 1); // n is 1-based, index is 0-based
+                    showSlides(carouselId, n - 1); 
                 }
             }
 
             // Initialize the "Custom Theme" carousel on page load
             initializeCarousel('customThemeCarousel');
+
+
+            // --- 7. Long Press (Long Click) Logic สำหรับเปิด img.html ---
+            
+            // --- นำ Long Press ไปใช้กับ Card ปกติ (1, 2, 4, 5) ---
+            document.querySelectorAll('.image-link').forEach(link => {
+                const htmlUrl = link.href;
+                const placeholder = link.querySelector('.video-placeholder');
+                
+                if(placeholder) {
+                    setupLongPressListeners(placeholder, htmlUrl);
+                }
+                
+                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal)
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // ป้องกันการไป href ทันที
+                    if (!pressTimer) { // ถ้าไม่มี timer (เป็นการคลิกสั้น)
+                       window.openImageModal(link);
+                    } 
+                });
+            });
+            
+            // --- นำ Long Press ไปใช้กับ Carousel (Card 3) ---
+            const carouselContainer = document.getElementById('customThemeCarousel');
+            if (carouselContainer) {
+                
+                carouselContainer.querySelectorAll('.video-placeholder').forEach(placeholder => {
+                    const htmlUrl = placeholder.getAttribute('data-html-url');
+                    
+                    if (htmlUrl) {
+                        setupLongPressListeners(placeholder, htmlUrl);
+                    }
+                    
+                    // Logic สำหรับเปิด Modal ในกรณีคลิกสั้น
+                    placeholder.addEventListener('click', function(event) {
+                        event.stopPropagation(); // สำคัญมากใน carousel
+                        
+                        // ตรวจสอบว่าไม่ได้มาจากปุ่มเปลี่ยนสไลด์ และไม่ใช่ Long Press
+                        if (!pressTimer && !event.target.closest('.carousel-button')) { 
+                            window.openImageModal(carouselContainer);
+                        }
+                    });
+                });
+            }
 
         });
     </script>
