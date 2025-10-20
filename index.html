@@ -31,7 +31,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Roboto', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* คงไว้: ลบสีไฮไลท์การแตะ */
         }
 
         body {
@@ -138,9 +138,11 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .sidebar a:hover {
+        /* ********* แก้ไข: ลบสีม่วงตอนกด/ชี้ที่ลิงก์ใน sidebar ********* */
+        .sidebar a:hover,
+        .sidebar a:active { 
             background-color: var(--tag-bg);
-            color: var(--primary-color);
+            color: var(--text-dark); /* เปลี่ยนให้เป็นสีข้อความปกติ */
         }
 
         .sidebar .closebtn {
@@ -152,6 +154,16 @@
             line-height: 50px; 
             color: var(--text-dark);
             border-bottom: none; 
+            
+            /* ********* เพิ่ม: ลบสีม่วงตอนกด X ********* */
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        /* ********* เพิ่ม: ลบสีม่วงตอนกด X (hover/active) ********* */
+        .sidebar .closebtn:hover,
+        .sidebar .closebtn:active {
+            color: var(--text-dark); 
+            background-color: transparent; 
         }
 
         .sidebar.active {
@@ -755,6 +767,7 @@
             
             function setupLongPressListeners(element, htmlUrl) {
                 
+                // สำหรับ Mouse (Desktop)
                 element.addEventListener('mousedown', function(e) {
                     if (e.button !== 0) return; 
                     if (!navigator.onLine) return;
@@ -764,6 +777,7 @@
                     pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
                 });
 
+                // สำหรับ Touch (Mobile)
                 element.addEventListener('touchstart', function(e) {
                     if (!navigator.onLine) return;
                     e.stopPropagation(); 
@@ -773,6 +787,7 @@
                     pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
                 });
                 
+                // ยกเลิก Long Press
                 element.addEventListener('mouseup', function(e) {
                     clearTimer();
                 });
@@ -1019,10 +1034,6 @@
                     // ป้องกัน Long Press ขณะ Swiping
                     clearTimer(); 
                 }
-
-                // หากต้องการให้ภาพเลื่อนตามนิ้วขณะลาก:
-                // carousel.imagesContainer.style.transition = 'none';
-                // carousel.imagesContainer.style.transform = `translateX(${-carousel.slideIndex * 100 - (diff / carousel.container.clientWidth) * 100}%)`;
             }
 
             function handleTouchEnd(e, carouselId) {
@@ -1045,7 +1056,6 @@
                 // รีเซ็ตค่า
                 carousel.startX = 0;
                 carousel.isSwiping = false;
-                // carousel.imagesContainer.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             }
 
 
