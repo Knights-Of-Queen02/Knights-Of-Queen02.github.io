@@ -587,7 +587,7 @@
         <section class="make-online-section">
             <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
             
-            <h1>KNIGHTS OF QUEEN02</h1>
+            <h1>KNIGHTS OF QUEEN03</h1>
             
             <p>
                 Customize your UI freely. <a 
@@ -633,12 +633,7 @@
             <div class="product-card">
                 <div class="tag-capsule">Make Menu Free Fire (2222 ฿)</div>
                 
-                <div 
-                    class="image-link" 
-                    data-html-url="img-1.html" 
-                    data-is-carousel="true"
-                    target="_blank"
-                > 
+                <div class="image-link" data-html-url="img-1.html" target="_blank" style="cursor: pointer;"> 
                     <div class="carousel-container" id="customThemeCarousel">
                         <div class="carousel-images">
                             
@@ -665,8 +660,8 @@
                             
                         </div>
                         
-                        <button class="carousel-button prev" onclick="moveCarousel('customThemeCarousel', -1)">&#10094;</button>
-                        <button class="carousel-button next" onclick="moveCarousel('customThemeCarousel', 1)">&#10095;</button>
+                        <button class="carousel-button prev" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', -1)">&#10094;</button>
+                        <button class="carousel-button next" onclick="event.stopPropagation(); moveCarousel('customThemeCarousel', 1)">&#10095;</button>
                         
                         <div class="carousel-indicators">
                             <span class="indicator-dot active" onclick="currentSlide('customThemeCarousel', 1)"></span>
@@ -735,7 +730,7 @@
             const LONG_PRESS_THRESHOLD = 500; // 500ms for long press
             let pressTimer;
             let currentLinkTarget = null;
-
+            
             function clearTimer() {
                 if (pressTimer) {
                     clearTimeout(pressTimer);
@@ -749,7 +744,7 @@
                 if (currentLinkTarget) {
                     console.log("Long press detected. Opening:", currentLinkTarget);
                     
-                    // Note: สำหรับ Card ที่ 3 (DIV) เราต้องเปิดลิงก์ด้วย JS แทน
+                    // ใช้ window.open(url, '_blank') เพื่อเปิดในแท็บใหม่
                     window.open(currentLinkTarget, '_blank');
                     currentLinkTarget = null; 
                     
@@ -771,12 +766,7 @@
 
                 element.addEventListener('touchstart', function(e) {
                     if (!navigator.onLine) return;
-                    
-                    // ** NEW: Card 3 (Carousel) ต้องไม่ให้ event.stopPropagation() เพื่อให้ swipe ทำงานได้ **
-                    const isCarousel = element.classList.contains('carousel-container');
-                    if (!isCarousel) {
-                        e.stopPropagation(); 
-                    }
+                    e.stopPropagation(); 
                     
                     currentLinkTarget = htmlUrl;
                     clearTimer();
@@ -836,7 +826,7 @@
             window.closeNav = closeNav;
 
 
-            // --- 3. Modal Logic ---
+            // --- 3. Modal Logic (รวมสำหรับ Card เดิมและ Carousel) ---
             const imageModal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             const closeButtonFloat = document.getElementById('closeButtonFloat');
@@ -870,7 +860,7 @@
                 let imageUrl = null;
                 let placeholder = null;
 
-                // สำหรับ Card ปกติ
+                // สำหรับ Card ปกติ (1, 2, 4, 5)
                 placeholder = triggerElement.querySelector('.video-placeholder');
                 
                 // สำหรับ Card 3 (Carousel): ต้องหา .video-placeholder ที่ active อยู่
@@ -980,7 +970,7 @@
             window.addEventListener('offline', updateConnectionStatus);
 
 
-            // --- 6. Carousel Logic (ปรับปรุงสำหรับ Card 3 ที่เป็น DIV) ---
+            // --- 6. Carousel Logic (เพิ่ม Swipe) ---
             const carousels = {}; 
 
             function initializeCarousel(carouselId) {
@@ -997,13 +987,11 @@
                     container: carouselElement,
                     imagesContainer: imagesContainer,
                     startX: 0, 
-                    isSwiping: false, 
-                    hasSwiped: false, 
-                    threshold: 50 
+                    isSwiping: false,
+                    threshold: 50 // ระยะ swipe ขั้นต่ำ
                 };
                 
                 // เพิ่ม event listeners สำหรับ Swipe
-                // เนื่องจาก Carousel ไม่ได้อยู่ใน A tag แล้ว การ Swipe จะไม่เด้งไปลิงก์อีกต่อไป
                 imagesContainer.addEventListener('touchstart', (e) => handleTouchStart(e, carouselId));
                 imagesContainer.addEventListener('touchmove', (e) => handleTouchMove(e, carouselId));
                 imagesContainer.addEventListener('touchend', (e) => handleTouchEnd(e, carouselId));
@@ -1031,6 +1019,10 @@
                     // ป้องกัน Long Press ขณะ Swiping
                     clearTimer(); 
                 }
+
+                // หากต้องการให้ภาพเลื่อนตามนิ้วขณะลาก:
+                // carousel.imagesContainer.style.transition = 'none';
+                // carousel.imagesContainer.style.transform = `translateX(${-carousel.slideIndex * 100 - (diff / carousel.container.clientWidth) * 100}%)`;
             }
 
             function handleTouchEnd(e, carouselId) {
@@ -1039,15 +1031,13 @@
 
                 const endX = e.changedTouches[0].clientX;
                 const diff = carousel.startX - endX;
-                
+
                 if (carousel.isSwiping && Math.abs(diff) > carousel.threshold) {
-                    
-                    // ป้องกันการเกิด click/long press จากการลาก (Swipe)
-                    e.preventDefault(); 
-                    
                     if (diff > 0) {
+                        // Swipe left (ไปรูปถัดไป)
                         showSlides(carouselId, carousel.slideIndex + 1);
                     } else {
+                        // Swipe right (ไปรูปก่อนหน้า)
                         showSlides(carouselId, carousel.slideIndex - 1);
                     }
                 }
@@ -1055,6 +1045,7 @@
                 // รีเซ็ตค่า
                 carousel.startX = 0;
                 carousel.isSwiping = false;
+                // carousel.imagesContainer.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             }
 
 
@@ -1091,14 +1082,17 @@
 
             // --- 7. Long Press (Long Click) & Short Click Logic (สำหรับ Modal/HTML) ---
             
+            // เลือกทั้ง A และ DIV ที่มี class="image-link"
             document.querySelectorAll('.image-link').forEach(link => {
-                // สำหรับ Card 1, 2, 4, 5 (A tag), htmlUrl = link.href
-                // สำหรับ Card 3 (DIV), htmlUrl = data-html-url
-                const htmlUrl = link.href || link.getAttribute('data-html-url'); 
+                
+                // สำหรับ A (Card ปกติ): ใช้ link.href. สำหรับ DIV (Card 3): ใช้ data-html-url
+                const htmlUrl = link.href || link.getAttribute('data-html-url');
                 
                 // placeholder คือตัวที่ใช้ตรวจจับ Long Press/Click
-                // สำหรับ Card 3, มันคือ div.carousel-container
                 const placeholder = link.querySelector('.video-placeholder') || link.querySelector('.carousel-container'); 
+                
+                // ตรวจสอบว่าเป็น Card 3 ที่เป็น DIV หรือไม่
+                const isDivLink = link.tagName === 'DIV'; 
                 
                 if(placeholder && htmlUrl) {
                     // กำหนด Long Press สำหรับทุก Card (กดค้างไปหน้า HTML)
@@ -1110,17 +1104,16 @@
                     
                     if (placeholder) {
                         
-                        // ถ้าเป็น A tag (Card 1, 2, 4, 5) ต้องป้องกันการเด้งไปลิงก์ทันที
-                        if (link.tagName === 'A') {
-                            event.preventDefault(); 
+                        // Card A tag (1, 2, 4, 5)
+                        if (!isDivLink) {
+                            event.preventDefault(); // ป้องกันการไป href ของ A
                         }
                         
-                        // ถ้าไม่ใช่ Long Press ให้เปิด Modal (ใช้ได้กับทุก Card)
+                        // ทั้ง A และ DIV: ถ้าเป็นการคลิกสั้น (ไม่มี timer) ให้เปิด Modal
                         if (!pressTimer) { 
                            window.openImageModal(link);
                         } else {
-                           // ถ้า pressTimer ยังรันอยู่ ให้ยกเลิก Long Press Timer
-                           clearTimer(); 
+                           clearTimer(); // ยกเลิก Long Press ที่กำลังจะเกิด
                         }
                     } 
                 });
