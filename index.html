@@ -31,7 +31,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Roboto', sans-serif;
-            -webkit-tap-highlight-color: transparent; /* คงไว้: ลบสีไฮไลท์การแตะ */
+            -webkit-tap-highlight-color: transparent; /* ลบสีไฮไลท์การแตะ */
         }
 
         body {
@@ -137,12 +137,12 @@
             font-weight: 500;
             border-bottom: 1px solid var(--border-color);
         }
-
-        /* ********* แก้ไข: ลบสีม่วงตอนกด/ชี้ที่ลิงก์ใน sidebar ********* */
+        
+        /* แก้ไข: ลบสีม่วงตอนกด/ชี้ที่ลิงก์ใน sidebar */
         .sidebar a:hover,
         .sidebar a:active { 
             background-color: var(--tag-bg);
-            color: var(--text-dark); /* เปลี่ยนให้เป็นสีข้อความปกติ */
+            color: var(--text-dark); 
         }
 
         .sidebar .closebtn {
@@ -154,12 +154,10 @@
             line-height: 50px; 
             color: var(--text-dark);
             border-bottom: none; 
-            
-            /* ********* เพิ่ม: ลบสีม่วงตอนกด X ********* */
             -webkit-tap-highlight-color: transparent; 
         }
         
-        /* ********* เพิ่ม: ลบสีม่วงตอนกด X (hover/active) ********* */
+        /* เพิ่ม: ลบสีม่วงตอนกด X (hover/active) */
         .sidebar .closebtn:hover,
         .sidebar .closebtn:active {
             color: var(--text-dark); 
@@ -249,7 +247,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* ใช้ได้ทั้ง A และ DIV สำหรับ image-link */
         .image-link { 
             text-decoration: none;
             color: inherit;
@@ -257,7 +254,6 @@
             cursor: pointer; 
         }
 
-        /* Card เดิม (video-placeholder) และ Carousel Items */
         .video-placeholder {
             width: 100%;
             padding-top: 56.25%; 
@@ -271,7 +267,6 @@
             touch-action: manipulation; 
         }
         
-        /* แก้ margin-bottom สำหรับ video-placeholder ที่อยู่ใน carousel */
         .carousel-images .video-placeholder {
             margin-bottom: 0;
             flex-shrink: 0;
@@ -289,7 +284,6 @@
         }
         
         .video-placeholder.loading::after {
-            /* Shimmer effect */
             content: "";
             position: absolute;
             top: 0;
@@ -343,7 +337,6 @@
             border-radius: 8px;
             margin: 0 auto; 
             background-color: var(--border-color); 
-            /* เพิ่ม cursor: pointer เพื่อให้รู้ว่าคลิกได้ */
             cursor: pointer; 
             touch-action: manipulation; 
         }
@@ -380,7 +373,7 @@
             transition: opacity 0.3s ease, background-color 0.3s ease;
             line-height: 1;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            pointer-events: auto; /* Ensure buttons are clickable */
+            pointer-events: auto; 
         }
 
         .carousel-button:hover {
@@ -414,7 +407,7 @@
             border-radius: 50%;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            pointer-events: auto; /* Ensure indicators are clickable */
+            pointer-events: auto; 
         }
 
         .indicator-dot.active {
@@ -499,6 +492,8 @@
             transform: scale(0.95); 
             opacity: 0;
             transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
+            width: 100%; /* ให้เต็มพื้นที่จอเมื่อมีหลายรูป */
+            height: 100%;
         }
         
         .modal-overlay.active .modal-content {
@@ -506,6 +501,7 @@
             opacity: 1;
         }
         
+        /* ********* แก้ไข/เพิ่ม: Modal Carousel Styles ********* */
         .modal-body {
             flex-grow: 1;
             display: flex;
@@ -515,6 +511,26 @@
             padding: 0;
             touch-action: none; 
             user-select: none;
+            width: 100%; 
+            height: 100%;
+        }
+
+        .modal-carousel-images {
+            display: flex;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            width: 100%;
+            height: 100%;
+            touch-action: pan-y; /* อนุญาตให้เลื่อนซ้ายขวา */
+            cursor: grab;
+        }
+
+        .modal-image-wrapper {
+            flex-shrink: 0; /* ป้องกันไม่ให้ wrapper ย่อขนาด */
+            width: 100%; 
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-image {
@@ -527,8 +543,9 @@
             cursor: default; 
             object-fit: contain; 
             pointer-events: none; 
-            transition: max-width 0.3s, max-height 0.3s;
+            transition: none; 
         }
+        /* ******************************************************* */
         
         .control-buttons-container {
             position: absolute;
@@ -543,28 +560,34 @@
             color: var(--modal-close-color); 
             font-weight: 300;
             cursor: pointer;
-            background-color: transparent; 
-            border-radius: 0; 
-            width: auto;      
-            height: auto;     
-            line-height: 1;   
-            padding: 5px 10px; 
+            background-color: rgba(0, 0, 0, 0.4); /* เพิ่มพื้นหลังเพื่อให้เห็นชัด */
+            border-radius: 50%; 
+            width: 40px;      
+            height: 40px;     
+            line-height: 40px;   
+            padding: 0; 
             text-align: center;
             font-size: 28px;
-            transition: color 0.2s; 
+            transition: background-color 0.2s, color 0.2s; 
         }
 
         .control-button:hover {
-            background-color: transparent; 
+            background-color: rgba(0, 0, 0, 0.7); 
             color: #ff0000; 
         }
 
         .close-button-float {
             font-size: 40px; 
             line-height: 1; 
-            width: auto;
-            height: auto;
-            padding: 5px 10px; 
+            width: 40px;
+            height: 40px;
+            padding: 0; 
+            margin-left: 10px; 
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         /* --- 4. ส่วน Footer --- */
@@ -597,9 +620,7 @@
         </div>
         
         <section class="make-online-section">
-            <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
-            
-            <h1>KNIGHTS OF QUEEN03</h1>
+            <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image">
             
             <p>
                 Customize your UI freely. <a 
@@ -724,12 +745,13 @@
             <span class="control-button close-button-float" id="closeButtonFloat">&times;</span> 
         </div>
 
-        <div class="modal-content">
-            <div class="modal-body">
-                <img id="modalImage" class="modal-image" src="" alt="">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-body" id="modalBody">
+                <div id="modalCarouselImages" class="modal-carousel-images">
+                    </div>
             </div>
         </div>
-    </div>
+        </div>
     
     <footer class="footer-section">
         &copy; 2024-2025 Knights Of Queen02 | All Rights Reserved
@@ -742,6 +764,19 @@
             const LONG_PRESS_THRESHOLD = 500; // 500ms for long press
             let pressTimer;
             let currentLinkTarget = null;
+            
+            // ********* ตัวแปรสำหรับ Modal และ Swipe *********
+            const imageModal = document.getElementById('imageModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalCarouselImages = document.getElementById('modalCarouselImages');
+            const closeButtonFloat = document.getElementById('closeButtonFloat');
+            
+            let modalImages = []; // Array เก็บ URL รูปภาพสำหรับ Modal
+            let modalCurrentSlide = 0;
+            let modalTouchStartX = 0;
+            let modalIsSwiping = false;
+            const SWIPE_THRESHOLD = 50;
+            // *******************************************
             
             function clearTimer() {
                 if (pressTimer) {
@@ -756,7 +791,6 @@
                 if (currentLinkTarget) {
                     console.log("Long press detected. Opening:", currentLinkTarget);
                     
-                    // ใช้ window.open(url, '_blank') เพื่อเปิดในแท็บใหม่
                     window.open(currentLinkTarget, '_blank');
                     currentLinkTarget = null; 
                     
@@ -767,7 +801,6 @@
             
             function setupLongPressListeners(element, htmlUrl) {
                 
-                // สำหรับ Mouse (Desktop)
                 element.addEventListener('mousedown', function(e) {
                     if (e.button !== 0) return; 
                     if (!navigator.onLine) return;
@@ -777,7 +810,6 @@
                     pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
                 });
 
-                // สำหรับ Touch (Mobile)
                 element.addEventListener('touchstart', function(e) {
                     if (!navigator.onLine) return;
                     e.stopPropagation(); 
@@ -787,7 +819,6 @@
                     pressTimer = setTimeout(() => handleLongPress(e), LONG_PRESS_THRESHOLD);
                 });
                 
-                // ยกเลิก Long Press
                 element.addEventListener('mouseup', function(e) {
                     clearTimer();
                 });
@@ -842,9 +873,6 @@
 
 
             // --- 3. Modal Logic (รวมสำหรับ Card เดิมและ Carousel) ---
-            const imageModal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const closeButtonFloat = document.getElementById('closeButtonFloat');
             
             function closeModal() {
                 imageModal.classList.remove('active');
@@ -854,7 +882,13 @@
                 window.scrollTo(0, scrollPosition); 
                 
                 setTimeout(() => {
-                    modalImage.src = ''; 
+                    modalCarouselImages.innerHTML = ''; // ลบรูปภาพใน Modal
+                    modalImages = []; // เคลียร์ Array
+                    modalCurrentSlide = 0;
+                    // ลบ Swipe Listener เมื่อปิด Modal
+                    modalCarouselImages.removeEventListener('touchstart', handleModalTouchStart);
+                    modalCarouselImages.removeEventListener('touchmove', handleModalTouchMove);
+                    modalCarouselImages.removeEventListener('touchend', handleModalTouchEnd);
                 }, 300); 
             }
 
@@ -871,38 +905,138 @@
                 if (sidebar.classList.contains('active')) {
                     closeNav();
                 }
-
-                let imageUrl = null;
-                let placeholder = null;
-
-                // สำหรับ Card ปกติ (1, 2, 4, 5)
-                placeholder = triggerElement.querySelector('.video-placeholder');
                 
-                // สำหรับ Card 3 (Carousel): ต้องหา .video-placeholder ที่ active อยู่
+                let placeholders = [];
                 const carouselContainer = triggerElement.querySelector('.carousel-container');
+
                 if (carouselContainer) {
-                    const carousel = carousels[carouselContainer.id];
-                    if (carousel) {
-                        // placeholder คือ .video-placeholder ที่ active อยู่
-                        placeholder = carousel.links[carousel.slideIndex]; 
+                    // สำหรับ Card 3 (Carousel): ดึงรูปทั้งหมด
+                    placeholders = Array.from(carouselContainer.querySelectorAll('.video-placeholder.loaded'));
+                    
+                } else {
+                    // สำหรับ Card ปกติ (1, 2, 4, 5): ดึงแค่รูปเดียว
+                    const placeholder = triggerElement.querySelector('.video-placeholder.loaded');
+                    if (placeholder) {
+                        placeholders.push(placeholder);
                     }
                 }
                 
-                if (placeholder && placeholder.classList.contains('loaded')) { 
-                    imageUrl = placeholder.getAttribute('data-image');
-                } else {
-                    console.log("Image source not found or still loading for modal.");
+                modalImages = placeholders.map(p => p.getAttribute('data-image'));
+                
+                let initialIndex = 0;
+                if (carouselContainer) {
+                    const carousel = carousels[carouselContainer.id];
+                    if (carousel) {
+                        initialIndex = carousel.slideIndex; 
+                    }
                 }
+                
 
-
-                if (imageUrl) {
+                if (modalImages.length > 0) {
+                    // 1. สร้าง HTML สำหรับรูปภาพใน Modal
+                    modalCarouselImages.innerHTML = modalImages.map(url => `
+                        <div class="modal-image-wrapper">
+                            <img class="modal-image" src="${url}" alt="">
+                        </div>
+                    `).join('');
+                    
+                    // 2. กำหนด Slide เริ่มต้น
+                    modalCurrentSlide = initialIndex % modalImages.length;
+                    updateModalSlide(0); 
+                    
+                    // 3. เปิด Modal
                     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                    modalImage.src = imageUrl;
                     imageModal.classList.add('active');
                     document.body.style.top = `-${scrollPosition}px`;
                     document.body.classList.add('modal-open'); 
+                    
+                    // 4. ตั้งค่า Swipe Listener (หากมีหลายรูป)
+                    if(modalImages.length > 1) {
+                         setupModalSwipe();
+                    } else {
+                         // ตรวจสอบให้แน่ใจว่าไม่มี listener ค้างอยู่ถ้ามีแค่รูปเดียว
+                         modalCarouselImages.removeEventListener('touchstart', handleModalTouchStart);
+                         modalCarouselImages.removeEventListener('touchmove', handleModalTouchMove);
+                         modalCarouselImages.removeEventListener('touchend', handleModalTouchEnd);
+                    }
+                } else {
+                    console.log("Image source not found or still loading for modal.");
                 } 
             }
+            
+            // ********* ฟังก์ชันเลื่อน Modal *********
+            function updateModalSlide(direction = 0) {
+                if (modalImages.length <= 1) return;
+                
+                modalCurrentSlide += direction;
+                
+                // วนลูป
+                if (modalCurrentSlide < 0) {
+                    modalCurrentSlide = modalImages.length - 1;
+                } else if (modalCurrentSlide >= modalImages.length) {
+                    modalCurrentSlide = 0;
+                }
+                
+                modalCarouselImages.style.transform = `translateX(${-modalCurrentSlide * 100}%)`;
+            }
+            
+            // ********* ฟังก์ชัน Swipe ใน Modal *********
+            function handleModalTouchStart(e) {
+                modalTouchStartX = e.touches[0].clientX;
+                modalIsSwiping = false; 
+                modalCarouselImages.style.transition = 'none'; // หยุด Transition ระหว่างลาก
+            }
+
+            function handleModalTouchMove(e) {
+                if (!modalTouchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const diff = modalTouchStartX - currentX;
+                
+                if (Math.abs(diff) > 10) { 
+                    modalIsSwiping = true;
+                    // ทำให้ภาพเลื่อนตามนิ้ว
+                    modalCarouselImages.style.transform = `translateX(${-modalCurrentSlide * 100}%) translateX(${-diff}px)`;
+                }
+            }
+
+            function handleModalTouchEnd(e) {
+                if (!modalTouchStartX) return;
+
+                const endX = e.changedTouches[0].clientX;
+                const diff = modalTouchStartX - endX;
+
+                modalCarouselImages.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                if (modalIsSwiping && Math.abs(diff) > SWIPE_THRESHOLD) {
+                    if (diff > 0) {
+                        // Swipe left (ไปรูปถัดไป)
+                        updateModalSlide(1);
+                    } else {
+                        // Swipe right (ไปรูปก่อนหน้า)
+                        updateModalSlide(-1);
+                    }
+                } else {
+                    // ถ้าเลื่อนไม่ถึง threshold ให้กลับไปที่เดิม
+                    updateModalSlide(0); 
+                }
+                
+                // รีเซ็ตค่า
+                modalTouchStartX = 0;
+                modalIsSwiping = false;
+            }
+            
+            function setupModalSwipe() {
+                // ลบ Event Listener เก่าออกก่อนเสมอ
+                modalCarouselImages.removeEventListener('touchstart', handleModalTouchStart);
+                modalCarouselImages.removeEventListener('touchmove', handleModalTouchMove);
+                modalCarouselImages.removeEventListener('touchend', handleModalTouchEnd);
+                
+                modalCarouselImages.addEventListener('touchstart', handleModalTouchStart);
+                modalCarouselImages.addEventListener('touchmove', handleModalTouchMove);
+                modalCarouselImages.addEventListener('touchend', handleModalTouchEnd);
+            }
+            // *******************************************
 
 
             closeButtonFloat.addEventListener('click', closeModal);
@@ -1003,7 +1137,7 @@
                     imagesContainer: imagesContainer,
                     startX: 0, 
                     isSwiping: false,
-                    threshold: 50 // ระยะ swipe ขั้นต่ำ
+                    threshold: 50 
                 };
                 
                 // เพิ่ม event listeners สำหรับ Swipe
@@ -1018,7 +1152,6 @@
                 const carousel = carousels[carouselId];
                 carousel.startX = e.touches[0].clientX;
                 carousel.isSwiping = false; 
-                // หยุด timer ของ Long Press เมื่อเริ่ม TouchStart
                 clearTimer(); 
             }
 
@@ -1031,7 +1164,6 @@
                 
                 if (Math.abs(diff) > 10) { 
                     carousel.isSwiping = true;
-                    // ป้องกัน Long Press ขณะ Swiping
                     clearTimer(); 
                 }
             }
@@ -1045,15 +1177,12 @@
 
                 if (carousel.isSwiping && Math.abs(diff) > carousel.threshold) {
                     if (diff > 0) {
-                        // Swipe left (ไปรูปถัดไป)
                         showSlides(carouselId, carousel.slideIndex + 1);
                     } else {
-                        // Swipe right (ไปรูปก่อนหน้า)
                         showSlides(carouselId, carousel.slideIndex - 1);
                     }
                 }
                 
-                // รีเซ็ตค่า
                 carousel.startX = 0;
                 carousel.isSwiping = false;
             }
@@ -1092,38 +1221,30 @@
 
             // --- 7. Long Press (Long Click) & Short Click Logic (สำหรับ Modal/HTML) ---
             
-            // เลือกทั้ง A และ DIV ที่มี class="image-link"
             document.querySelectorAll('.image-link').forEach(link => {
                 
-                // สำหรับ A (Card ปกติ): ใช้ link.href. สำหรับ DIV (Card 3): ใช้ data-html-url
                 const htmlUrl = link.href || link.getAttribute('data-html-url');
                 
-                // placeholder คือตัวที่ใช้ตรวจจับ Long Press/Click
                 const placeholder = link.querySelector('.video-placeholder') || link.querySelector('.carousel-container'); 
                 
-                // ตรวจสอบว่าเป็น Card 3 ที่เป็น DIV หรือไม่
                 const isDivLink = link.tagName === 'DIV'; 
                 
                 if(placeholder && htmlUrl) {
-                    // กำหนด Long Press สำหรับทุก Card (กดค้างไปหน้า HTML)
                     setupLongPressListeners(placeholder, htmlUrl);
                 }
                 
-                // ใช้ addEventListener สำหรับการคลิกสั้น (เปิด Modal)
                 link.addEventListener('click', function(event) {
                     
                     if (placeholder) {
                         
-                        // Card A tag (1, 2, 4, 5)
                         if (!isDivLink) {
-                            event.preventDefault(); // ป้องกันการไป href ของ A
+                            event.preventDefault(); 
                         }
                         
-                        // ทั้ง A และ DIV: ถ้าเป็นการคลิกสั้น (ไม่มี timer) ให้เปิด Modal
                         if (!pressTimer) { 
                            window.openImageModal(link);
                         } else {
-                           clearTimer(); // ยกเลิก Long Press ที่กำลังจะเกิด
+                           clearTimer(); 
                         }
                     } 
                 });
