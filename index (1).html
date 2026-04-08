@@ -94,8 +94,8 @@
                 <button id="openUpload" class="hidden md:flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-rose-200 transition-all font-medium">
                     <i class="fas fa-plus"></i> ลงวิดีโอเพลง
                 </button>
-                <div class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-white">
-                    <img src="https://i.pinimg.com/originals/82/3b/68/823b6833157e8020d91242337a77e742.jpg" alt="Profile" class="w-full h-full object-cover">
+                <div class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile">
                 </div>
             </div>
         </header>
@@ -125,11 +125,11 @@
                     </p>
 
                     <div class="flex items-center justify-center md:justify-start gap-4">
-                        <button id="prevTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all opacity-40 pointer-events-none"><i class="fas fa-backward"></i></button>
+                        <button id="prevTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all"><i class="fas fa-backward"></i></button>
                         <button id="playBtn" class="w-16 h-16 flex items-center justify-center bg-rose-500 text-white rounded-full shadow-lg shadow-rose-200 transition-all text-xl">
                             <i class="fas fa-play" id="playIcon"></i>
                         </button>
-                        <button id="nextTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all opacity-40 pointer-events-none"><i class="fas fa-forward"></i></button>
+                        <button id="nextTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all"><i class="fas fa-forward"></i></button>
                     </div>
                     <!-- Hidden Audio Player -->
                     <audio id="mainAudio" src="assets/music/song1.mp3"></audio>
@@ -329,7 +329,7 @@
             mainAudio.play();
             playIcon.classList.remove('fa-play', 'fa-pause');
             playIcon.classList.add('fa-pause');
-            musicDisks.forEach(d => d.classList.add('paused'));
+            musicDisks.forEach(d => d.classList.remove('paused'));
         });
 
         // Toggle Modal

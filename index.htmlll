@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>พื้นที่ของคนน่ารัก</title>
+    <title>Music for My Love | พื้นที่อวดแฟน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -39,17 +39,9 @@
             background: #fbcfe8;
             border-radius: 10px;
         }
-        /* ปรับให้ไอคอนอยู่กึ่งกลางเป๊ะ */
-        #playBtn i {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
     </style>
 </head>
-<body class="pb-10 lg:pb-0">
+<body class="pb-24 lg:pb-0">
 
     <!-- Desktop Sidebar -->
     <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-white/50 backdrop-blur-md border-r border-rose-100 flex-col p-6 z-50">
@@ -87,22 +79,42 @@
         <!-- Header -->
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">พื้นที่ของคนน่ารัก ♡</h1>
-                <p class="text-gray-500 text-sm">Design by Athena</p>
+                <h1 class="text-2xl font-bold text-gray-800">หวัดดีตัวเล็ก 👋</h1>
+                <p class="text-gray-500 text-sm">วันนี้มีเพลงไหนอยากบอกรักแฟนไหม?</p>
             </div>
             <div class="flex items-center gap-3">
                 <button id="openUpload" class="hidden md:flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-rose-200 transition-all font-medium">
                     <i class="fas fa-plus"></i> ลงวิดีโอเพลง
                 </button>
-                <div class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-white">
-                    <img src="https://i.pinimg.com/originals/82/3b/68/823b6833157e8020d91242337a77e742.jpg" alt="Profile" class="w-full h-full object-cover">
+                <div class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile">
                 </div>
             </div>
         </header>
 
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">12</span>
+                <span class="text-gray-400 text-xs">วิดีโอเพลง</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">482</span>
+                <span class="text-gray-400 text-xs">หัวใจที่ได้รับ</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">5</span>
+                <span class="text-gray-400 text-xs">แท็กถึงแฟน</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">1.2k</span>
+                <span class="text-gray-400 text-xs">คนมาดูความหวาน</span>
+            </div>
+        </div>
+
         <!-- Featured Video (Music Player Style) -->
         <section class="mb-10">
-            <h2 class="text-lg font-bold text-gray-700 mb-4 px-2">เพลงโปรดของเรา</h2>
+            <h2 class="text-lg font-bold text-gray-700 mb-4 px-2">เพลงโปรดของเรา 💖</h2>
             <div class="relative overflow-hidden glass-card p-6 flex flex-col md:flex-row items-center gap-8 border-rose-200 border">
                 <div class="relative z-10 w-48 h-48 flex-shrink-0">
                     <div class="music-disk paused absolute inset-0 bg-black rounded-full shadow-2xl flex items-center justify-center">
@@ -116,20 +128,14 @@
                 </div>
                 <div class="flex-1 text-center md:text-left">
                     <span class="bg-rose-100 text-rose-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Now Playing</span>
-                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-1">ยังคิดถึง</h3>
-                    
-                    <!-- ส่วนแท็กแฟน ปรับให้กดเด้งไป IG -->
-                    <p id="currentPartner" class="text-rose-400 font-medium mb-6">
-                        แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> 
-                        <a href="https://www.instagram.com/b9nqx_?igsh=MTdnNzJ3ZHBmdnhsag==" target="_blank" id="fanLink" class="hover:underline">@คนน่ารัก</a>
-                    </p>
-
+                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-1">ยินดีที่ได้รู้จัก</h3>
+                    <p id="currentPartner" class="text-rose-400 font-medium mb-6">แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> @ตัวเล็กของพี่</p>
                     <div class="flex items-center justify-center md:justify-start gap-4">
-                        <button id="prevTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all opacity-40 pointer-events-none"><i class="fas fa-backward"></i></button>
-                        <button id="playBtn" class="w-16 h-16 flex items-center justify-center bg-rose-500 text-white rounded-full shadow-lg shadow-rose-200 transition-all text-xl">
-                            <i class="fas fa-play" id="playIcon"></i>
+                        <button id="prevTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md hover:scale-110 transition-all"><i class="fas fa-backward"></i></button>
+                        <button id="playBtn" class="w-16 h-16 flex items-center justify-center bg-rose-500 text-white rounded-full shadow-lg shadow-rose-200 hover:scale-110 transition-all text-xl">
+                            <i class="fas fa-play ml-1" id="playIcon"></i>
                         </button>
-                        <button id="nextTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all opacity-40 pointer-events-none"><i class="fas fa-forward"></i></button>
+                        <button id="nextTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md hover:scale-110 transition-all"><i class="fas fa-forward"></i></button>
                     </div>
                     <!-- Hidden Audio Player -->
                     <audio id="mainAudio" src="assets/music/song1.mp3"></audio>
@@ -137,10 +143,40 @@
             </div>
         </section>
 
-        <!-- Hidden Video Grid (Removed Latest Moments section as requested) -->
-        <section id="videoGrid" class="hidden"></section>
-
+        <!-- Video Grid -->
+        <section>
+            <div class="flex justify-between items-center mb-6 px-2">
+                <h2 class="text-lg font-bold text-gray-700">โมเมนต์หวานๆ ล่าสุด</h2>
+                <a href="#" class="text-rose-400 text-sm font-medium">ดูทั้งหมด</a>
+            </div>
+            <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Data will be populated from data list below -->
+            </div>
+        </section>
     </main>
+
+    <!-- Mobile Navigation Bar -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-rose-100 px-6 py-3 flex justify-between items-center z-50">
+        <button class="text-rose-500 flex flex-col items-center gap-1">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-[10px] font-bold">หน้าหลัก</span>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-search text-lg"></i>
+            <span class="text-[10px] font-bold">ค้นหา</span>
+        </button>
+        <button id="mobileUpload" class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-200 -mt-8 border-4 border-white">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-heart text-lg"></i>
+            <span class="text-[10px] font-bold">หัวใจ</span>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px] font-bold">โปรไฟล์</span>
+        </button>
+    </nav>
 
     <!-- Video Preview Modal (New for local video playback) -->
     <div id="videoModal" class="fixed inset-0 bg-black/90 z-[70] hidden flex items-center justify-center p-4">
@@ -216,8 +252,8 @@
         ];
 
         const audioPlaylist = [
-            { title: "ยังคิดถึง", partner: "@คนน่ารัก", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3", ig: "https://www.instagram.com/b9nqx_?igsh=MTdnNzJ3ZHBmdnhsag==" },
-            { title: "รักเธอเท่าจักรวาล", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3", ig: "https://www.instagram.com/your_girlfriend_ig/" }
+            { title: "ยินดีที่ได้รู้จัก", partner: "@ตัวเล็กของพี่", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3" },
+            { title: "รักเธอเท่าจักรวาล", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3" }
         ];
 
         let currentTrackIndex = 0;
@@ -227,6 +263,7 @@
         const uploadModal = document.getElementById('uploadModal');
         const modalContainer = document.getElementById('modalContainer');
         const openBtn = document.getElementById('openUpload');
+        const mobileOpenBtn = document.getElementById('mobileUpload');
         const closeBtn = document.getElementById('closeUpload');
         const submitBtn = document.getElementById('submitVideo');
         
@@ -242,7 +279,6 @@
 
         // --- Init Functions ---
         function renderGrid() {
-            if(!videoGrid) return;
             videoGrid.innerHTML = '';
             myLoveMoments.forEach(moment => {
                 const card = document.createElement('div');
@@ -304,11 +340,7 @@
         function loadTrack(index) {
             const track = audioPlaylist[index];
             document.getElementById('currentTitle').textContent = track.title;
-            // แก้ไข link IG ของแฟน
-            const fanLink = document.getElementById('fanLink');
-            fanLink.textContent = track.partner;
-            if(track.ig) fanLink.href = track.ig;
-            
+            document.getElementById('currentPartner').innerHTML = `แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> ${track.partner}`;
             document.getElementById('currentCover').src = track.cover;
             mainAudio.src = track.file;
             if (!mainAudio.paused) mainAudio.play();
@@ -329,7 +361,7 @@
             mainAudio.play();
             playIcon.classList.remove('fa-play', 'fa-pause');
             playIcon.classList.add('fa-pause');
-            musicDisks.forEach(d => d.classList.add('paused'));
+            musicDisks.forEach(d => d.classList.remove('paused'));
         });
 
         // Toggle Modal
@@ -350,6 +382,7 @@
         }
 
         openBtn.addEventListener('click', () => toggleModal(true));
+        mobileOpenBtn.addEventListener('click', () => toggleModal(true));
         closeBtn.addEventListener('click', () => toggleModal(false));
 
         // Close on backdrop click
@@ -390,7 +423,7 @@
 
             // Update Player as well
             document.getElementById('currentTitle').textContent = title;
-            document.getElementById('fanLink').textContent = partner;
+            document.getElementById('currentPartner').innerHTML = `แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> ${partner}`;
 
             // Toast effect
             const toast = document.createElement('div');
