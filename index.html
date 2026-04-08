@@ -3,782 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knights-Of-Queen02</title>
-
-    <link rel="shortcut icon" href="B6BB28C0-F7E4-4302-8CA9-158B5735C62A.gif" sizes="32x32" type="image/x-icon">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <title>Music for My Love | พื้นที่อวดแฟน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- ตัวแปรและรีเซ็ต --- */
-        :root {
-            --primary-color: #9397F0;
-            --dark-blue: #696dc7;    
-            --text-dark: #333;
-            --text-light: #ffffff;
-            --bg-light: #f5f5f5; 
-            --card-bg: #ffffff; 
-            --border-color: #e0e0e0;
-            --tag-bg: #eeeeee;
-            --tag-text: #616161;
-            --button-border: #cccccc;
-            --overlay-bg: rgba(0, 0, 0, 0.7); 
-            --modal-close-color: #ffffff; 
-            --footer-bg: #444444; 
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Roboto', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
         body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            padding-top: 50px;
-            /* ลบ transition overflow เพื่อให้การคืนค่า scroll position ทันที */
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #fff1f2 100%);
+            min-height: 100vh;
         }
-
-        /* 💡 แก้ไข: ปรับ body.modal-open ให้รองรับการเลื่อนแบบมี offset */
-        body.modal-open {
-            overflow: hidden; 
-            position: fixed; /* ต้องใช้ fixed เพื่อไม่ให้เลื่อน */
-            width: 100%;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
         }
-        
-        /* 💡 NEW: ปรับ body.menu-open เมื่อ sidebar เปิด */
-        body.menu-open {
-            overflow: hidden;
+        .music-disk {
+            animation: rotate 10s linear infinite;
         }
-
-        /* [ถูกลบ] CSS สำหรับ body.internet-offline (ตามที่ร้องขอในรอบก่อน) */
-
-        .container {
-            max-width: 100%;
-            padding: 0;
+        .music-disk.paused {
+            animation-play-state: paused;
         }
-
-        /* --- 1. ส่วน Navigation Bar (เดิม) --- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px; 
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 999; 
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 500;
-            color: var(--text-dark);
-            text-decoration: none;
-            line-height: 1.2;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
         }
-
-        /* CSS สำหรับ Wavy Text Animation */
-        #typing-text {
-            display: flex; 
-            flex-wrap: nowrap;
-            overflow: visible;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
         }
-
-        .text-wave-char {
-            display: inline-block;
-            position: relative;
-            animation: wave 1.5s ease-in-out infinite; 
-            animation-delay: calc(var(--char-index) * 0.05s);
-            transform-origin: bottom; 
-            transform: translateY(0); 
-        }
-
-        @keyframes wave {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-                color: var(--primary-color);
-            }
-        }
-
-        .menu-icon {
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--text-dark);
-        }
-
-        /* --- 5. ส่วน Sidebar/Menu ใหม่ --- */
-        .sidebar {
-            height: 100%; /* เต็มความสูง */
-            width: 0; /* ซ่อนไว้เริ่มต้น */
-            position: fixed;
-            z-index: 1000; /* อยู่ด้านบนสุด */
-            top: 0;
-            right: 0;
-            background-color: var(--card-bg); 
-            overflow-x: hidden; 
-            transition: 0.3s; 
-            padding-top: 60px; /* เว้นที่ว่างสำหรับ navbar */
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            touch-action: manipulation; /* ป้องกันการเลื่อนที่ไม่ต้องการ */
-        }
-
-        .sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 18px;
-            color: var(--text-dark);
-            display: block;
-            transition: 0.3s;
-            font-weight: 500;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar a:hover {
-            background-color: var(--tag-bg);
-            color: var(--primary-color);
-        }
-
-        .sidebar .closebtn {
-            position: absolute;
-            top: 0;
-            right: 15px;
-            font-size: 36px;
-            margin-left: 50px;
-            line-height: 50px; /* จัดให้อยู่ตรงกลาง navbar */
-            color: var(--text-dark);
-            border-bottom: none; /* ลบเส้นใต้ออก */
-        }
-
-        /* แสดงเมนูเมื่อมีคลาส active */
-        .sidebar.active {
-            width: 250px; /* ความกว้างของเมนูเมื่อเปิด */
-        }
-        
-        @media screen and (min-width: 600px) {
-            .sidebar.active {
-                width: 300px;
-            }
-        }
-
-
-        /* --- 2. ส่วน Make online (เดิม) --- */
-        .make-online-section {
-            background-color: var(--dark-blue);
-            color: var(--text-light);
-            padding: 40px 20px;
-            margin-bottom: 20px;
-            text-align: center; 
-        }
-
-        .main-logo-image {
-            width: 100px; 
-            height: auto;
-            display: block; 
-            margin: 0 auto 20px auto; 
-        }
-        
-        .make-online-section h1 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: none;
-            -webkit-background-clip: initial;
-            background-clip: initial;
-            color: var(--text-light); 
-            text-shadow: none;
-            letter-spacing: initial;
-        }
-
-        .make-online-section p {
-            font-size: 16px;
-            font-weight: 300;
-            margin: 0 auto 15px;
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .make-online-section a {
-            color: #ff9800;
-            text-decoration: none;
-            font-weight: 500;
-            display: block;
-            margin-top: 10px;
-        }
-
-        /* --- 3. ส่วน Card รายการ (เดิม) --- */
-        .content-section {
-            padding: 0 10px;
-        }
-
-        .product-card {
-            background-color: var(--card-bg);
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
             border-radius: 10px;
-            margin: 10px;
-            padding: 20px 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-            text-align: center; 
         }
-
-        .tag-capsule {
-            display: inline-block;
-            background-color: var(--tag-bg);
-            color: var(--tag-text);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            text-transform: none;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .image-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            cursor: pointer; 
-        }
-
-        /* 💡 Video Placeholder Base (Skeleton พื้นหลัง) */
-        .video-placeholder {
-            width: 100%;
-            padding-top: 56.25%; 
-            height: 0;
-            background-color: var(--border-color); 
-            border-radius: 8px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden; 
-            margin: 0 auto 20px;
-            cursor: pointer; 
-        }
-        
-        /* 💡 รูปภาพจริง (ซ่อนเมื่อ Loading) */
-        .video-placeholder img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0; 
-            transition: opacity 0.5s ease; 
-        }
-        
-        /* 💡 Shimmer Effect Animation */
-        .video-placeholder.loading::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.4) 50%, 
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: translateX(-100%); 
-            z-index: 10;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            100% {
-                transform: translateX(100%); 
-            }
-        }
-
-        /* 💡 เมื่อภาพโหลดเสร็จ (JS จะเพิ่ม class 'loaded') */
-        .video-placeholder.loaded img {
-            opacity: 1; 
-        }
-        .video-placeholder.loaded::after {
-            content: none; 
-        }
-        
-        /* เมื่อออฟไลน์ จะบังคับให้แสดงสถานะ Loading */
-        body.internet-offline .video-placeholder {
-            cursor: default; 
-        }
-        body.internet-offline .video-placeholder img {
-            opacity: 0 !important; 
-        }
-        body.internet-offline .video-placeholder::after {
-            content: ""; 
-            animation: shimmer 1.5s infinite !important;
-            transform: translateX(-100%) !important;
-            z-index: 10 !important;
-        }
-
-
-        /* ปุ่ม Contact Admin (เดิม) */
-        .submit-button {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: var(--bg-light); 
-            color: var(--primary-color); 
-            border: 1px solid var(--button-border);
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none; 
-            display: inline-block;
-            transition: none;
-        }
-        
-        .submit-button:hover,
-        .submit-button:active,
-        .submit-button:visited, 
-        .submit-button:focus {
-            background-color: var(--bg-light); 
-            color: var(--primary-color);      
-            box-shadow: none; 
-            transform: none; 
-            outline: none;                    
-        }
-        
-        /* --- Modal Styles (เดิม) --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: transparent; 
-            backdrop-filter: blur(0px);    
-            -webkit-backdrop-filter: blur(0px);
-            
-            transition: opacity 0.3s ease-out, 
-                        background-color 0.3s ease-out, 
-                        backdrop-filter 0.3s ease-out; 
-                        
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            overflow: hidden; 
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            background-color: var(--overlay-bg); 
-            backdrop-filter: blur(8px);       
-            -webkit-backdrop-filter: blur(8px);
-        }
-        
-        .modal-content {
-            background-color: transparent; 
-            border-radius: 10px;
-            max-width: 90%;
-            max-height: 90%;
-            padding: 0; 
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            box-shadow: none; 
-            
-            transform: scale(0.95); 
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-        
-        .modal-body {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; 
-            padding: 0;
-            touch-action: none; 
-            user-select: none;
-        }
-
-        .modal-image {
-            max-width: 100%; 
-            max-height: 100%; 
-            width: auto;
-            height: auto;
-            display: block;
-            border-radius: 10px; 
-            cursor: default; 
-            object-fit: contain; 
-            pointer-events: none; 
-            transition: max-width 0.3s, max-height 0.3s;
-        }
-        
-        .control-buttons-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 1001;
-            display: flex;
-        }
-
-        /* ปุ่ม X ที่ไม่มีวงกลม */
-        .control-button {
-            color: var(--modal-close-color); 
-            font-weight: 300;
-            cursor: pointer;
-            background-color: transparent; 
-            border-radius: 0; 
-            width: auto;      
-            height: auto;     
-            line-height: 1;   
-            padding: 5px 10px; 
-            text-align: center;
-            font-size: 28px;
-            transition: color 0.2s; 
-        }
-
-        .control-button:hover {
-            background-color: transparent; 
-            color: #ff0000; 
-        }
-
-        .close-button-float {
-            font-size: 40px; 
-            line-height: 1; 
-            width: auto;
-            height: auto;
-            padding: 5px 10px; 
-        }
-        
-        /* --- 4. ส่วน Footer (เดิม) --- */
-        .footer-section {
-            background-color: var(--footer-bg);
-            color: var(--bg-light); 
-            padding: 10px 20px; 
-            text-align: center;
-            font-size: 12px; 
-            margin-top: 30px; 
-        }
-
     </style>
 </head>
-<body>
-    <div class="container">
-        <nav class="navbar">
-            <a href="#" class="logo">
-                <span id="typing-text"></span>
-            </a>
-            <span class="menu-icon" onclick="openNav()">&#9776;</span>
-        </nav>
+<body class="pb-24 lg:pb-0">
 
-        <div id="mySidebar" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            
-            <a href="index.html">Home</a>
-            
-            <a href="repo.html">Repo Jailbreak</a>
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-white/50 backdrop-blur-md border-r border-rose-100 flex-col p-6 z-50">
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <div class="w-10 h-10 bg-rose-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-rose-200">
+                <i class="fas fa-heart text-lg"></i>
+            </div>
+            <span class="text-xl font-bold text-rose-600">LovePlayer</span>
         </div>
         
-        <section class="make-online-section">
-            <img src="https://user-images.githubusercontent.com/74038190/212281780-0afd9616-8310-46e9-a898-c4f5269f1387.gif" alt="KOQ Store Logo" class="main-logo-image"> 
+        <nav class="space-y-4 flex-1">
+            <a href="#" class="flex items-center gap-4 p-3 bg-rose-500 text-white rounded-2xl shadow-md transition-all">
+                <i class="fas fa-home w-5"></i> หน้าหลัก
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-music w-5"></i> คลังเพลงรัก
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-user-friends w-5"></i> แท็กแฟน
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-cog w-5"></i> ตั้งค่า
+            </a>
+        </nav>
+
+        <div class="glass-card p-4 text-center mt-auto">
+            <p class="text-xs text-rose-400 font-medium">ฉลองครบรอบ</p>
+            <p class="text-lg font-bold text-rose-600">365 วัน</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-64 p-4 lg:p-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">หวัดดีตัวเล็ก 👋</h1>
+                <p class="text-gray-500 text-sm">วันนี้มีเพลงไหนอยากบอกรักแฟนไหม?</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="openUpload" class="hidden md:flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-rose-200 transition-all font-medium">
+                    <i class="fas fa-plus"></i> ลงวิดีโอเพลง
+                </button>
+                <div class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile">
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">12</span>
+                <span class="text-gray-400 text-xs">วิดีโอเพลง</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">482</span>
+                <span class="text-gray-400 text-xs">หัวใจที่ได้รับ</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">5</span>
+                <span class="text-gray-400 text-xs">แท็กถึงแฟน</span>
+            </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+                <span class="text-rose-500 text-xl font-bold">1.2k</span>
+                <span class="text-gray-400 text-xs">คนมาดูความหวาน</span>
+            </div>
+        </div>
+
+        <!-- Featured Video (Music Player Style) -->
+        <section class="mb-10">
+            <h2 class="text-lg font-bold text-gray-700 mb-4 px-2">เพลงโปรดของเรา 💖</h2>
+            <div class="relative overflow-hidden glass-card p-6 flex flex-col md:flex-row items-center gap-8 border-rose-200 border">
+                <div class="relative z-10 w-48 h-48 flex-shrink-0">
+                    <div class="music-disk paused absolute inset-0 bg-black rounded-full shadow-2xl flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 rounded-full backdrop-blur-md"></div>
+                    </div>
+                    <!-- เปลี่ยน src เป็นไฟล์จากโฟลเดอร์ assets/images/cover.jpg -->
+                    <img id="currentCover" src="assets/images/default-cover.jpg" alt="Cover" class="music-disk paused absolute inset-0 w-full h-full object-cover rounded-full border-4 border-white shadow-xl opacity-80" onerror="this.src='https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&q=80&w=400'">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-4 h-4 bg-white rounded-full z-20 shadow-inner"></div>
+                    </div>
+                </div>
+                <div class="flex-1 text-center md:text-left">
+                    <span class="bg-rose-100 text-rose-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Now Playing</span>
+                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-1">ยินดีที่ได้รู้จัก</h3>
+                    <p id="currentPartner" class="text-rose-400 font-medium mb-6">แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> @ตัวเล็กของพี่</p>
+                    <div class="flex items-center justify-center md:justify-start gap-4">
+                        <button id="prevTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md hover:scale-110 transition-all"><i class="fas fa-backward"></i></button>
+                        <button id="playBtn" class="w-16 h-16 flex items-center justify-center bg-rose-500 text-white rounded-full shadow-lg shadow-rose-200 hover:scale-110 transition-all text-xl">
+                            <i class="fas fa-play ml-1" id="playIcon"></i>
+                        </button>
+                        <button id="nextTrack" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md hover:scale-110 transition-all"><i class="fas fa-forward"></i></button>
+                    </div>
+                    <!-- Hidden Audio Player -->
+                    <audio id="mainAudio" src="assets/music/song1.mp3"></audio>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Grid -->
+        <section>
+            <div class="flex justify-between items-center mb-6 px-2">
+                <h2 class="text-lg font-bold text-gray-700">โมเมนต์หวานๆ ล่าสุด</h2>
+                <a href="#" class="text-rose-400 text-sm font-medium">ดูทั้งหมด</a>
+            </div>
+            <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Data will be populated from data list below -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Navigation Bar -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-rose-100 px-6 py-3 flex justify-between items-center z-50">
+        <button class="text-rose-500 flex flex-col items-center gap-1">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-[10px] font-bold">หน้าหลัก</span>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-search text-lg"></i>
+            <span class="text-[10px] font-bold">ค้นหา</span>
+        </button>
+        <button id="mobileUpload" class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-200 -mt-8 border-4 border-white">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-heart text-lg"></i>
+            <span class="text-[10px] font-bold">หัวใจ</span>
+        </button>
+        <button class="text-gray-400 flex flex-col items-center gap-1">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px] font-bold">โปรไฟล์</span>
+        </button>
+    </nav>
+
+    <!-- Video Preview Modal (New for local video playback) -->
+    <div id="videoModal" class="fixed inset-0 bg-black/90 z-[70] hidden flex items-center justify-center p-4">
+        <button id="closeVideo" class="absolute top-6 right-6 text-white text-3xl"><i class="fas fa-times"></i></button>
+        <video id="modalVideoPlayer" controls class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl">
+            <source id="videoSource" src="" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="glass-card bg-white w-full max-w-lg overflow-hidden shadow-2xl scale-95 transition-transform duration-300" id="modalContainer">
+            <div class="p-6 border-b border-rose-50 flex justify-between items-center bg-rose-50/50">
+                <h3 class="text-lg font-bold text-gray-800 italic"><i class="fas fa-music text-rose-500 mr-2"></i>ลงเพลงอวดแฟน</h3>
+                <button id="closeUpload" class="text-gray-400 hover:text-rose-500 transition-colors"><i class="fas fa-times text-xl"></i></button>
+            </div>
             
-            <p>
-                Customize your UI freely. <a 
-                    href="https://t.me/K02_TH" 
-                    target="_blank" 
-                    style="color: #d8bfd8 !important; text-decoration: underline !important; display: inline !important; font-weight: 500;"
-                >
-                    Click here to contact the admin.
-                </a>
-            </p>
-        </section>
-
-        <section class="content-section">
-
-            <div class="product-card"> 
-                <div class="tag-capsule">Custom Alert PopUp</div>
-                
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/dVGp2HL8/98793439-DDF7-4326-8524-435190EC9703.jpg">
-                        <img src="https://i.postimg.cc/dVGp2HL8/98793439-DDF7-4326-8524-435190EC9703.jpg" alt=""> 
+            <div class="p-6 space-y-5 overflow-y-auto max-h-[80vh] custom-scrollbar">
+                <!-- Cover Selection -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">เลือกปกเพลงสวยๆ</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-4 ring-rose-400">
+                            <img src="assets/images/cover1.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-0 ring-rose-400">
+                            <img src="assets/images/cover2.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-0 ring-rose-400">
+                            <img src="assets/images/cover3.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button class="bg-gray-100 rounded-xl flex flex-col items-center justify-center text-gray-400 text-xs gap-1 border-2 border-dashed border-gray-200">
+                            <i class="fas fa-image"></i>
+                            ดึงจากไฟล์
+                        </button>
                     </div>
-                </a>
-                
-                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
-                    Contact Admin
-                </a>
-            </div>
+                </div>
 
-            <div class="product-card">
-                <div class="tag-capsule">SCLAlertView</div>
-                
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/k50CJ66w/74DD9367-4B2D-49FF-A36C-B9163DCCDE3F.jpg">
-                        <img src="https://i.postimg.cc/k50CJ66w/74DD9367-4B2D-49FF-A36C-B9163DCCDE3F.jpg" alt="">
+                <!-- Video Input -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อไฟล์วิดีโอ (เตรียมไว้ใน assets/videos/)</label>
+                    <div class="relative">
+                        <i class="fas fa-file-video absolute left-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <input id="inputVideoFile" type="text" placeholder="เช่น video1.mp4" class="w-full bg-gray-50 border-none rounded-2xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-rose-300 outline-none transition-all text-sm">
                     </div>
-                </a>
-                
-                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
-                    Contact Admin
-                </a>
-            </div>
+                </div>
 
-            <div class="product-card">
-                <div class="tag-capsule">Make Menu Free Fire</div>
-                
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/sg8P2sjs/6FC9ECFD-F524-4CD5-8BB9-A24D7997D068.jpg">
-                        <img src="https://i.postimg.cc/sg8P2sjs/6FC9ECFD-F524-4CD5-8BB9-A24D7997D068.jpg" alt="">
+                <!-- Song Info -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อเพลง</label>
+                        <input id="inputTitle" type="text" placeholder="เช่น ยินดีที่ได้รู้จัก" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
                     </div>
-                </a>
-                
-                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
-                    Contact Admin
-                </a>
-            </div>
-
-            <div class="product-card">
-                <div class="tag-capsule">Server Key</div>
-                
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/wMrkT1Mw/7713776-D-E956-48-B2-BA09-623-A621-CF43-D.jpg">
-                        <img src="https://i.postimg.cc/wMrkT1Mw/7713776-D-E956-48-B2-BA09-623-A621-CF43-D.jpg" alt="">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อคนสำคัญ (แท็กแฟน)</label>
+                        <input id="inputPartner" type="text" placeholder="@ชื่อแฟน" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
                     </div>
-                </a>
-                
-                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
-                    Contact Admin
-                </a>
-            </div>
+                </div>
 
-            <div class="product-card">
-                <div class="tag-capsule">Custom Menu Objective-C</div>
-                
-                <a href="img.html" class="image-link" target="_blank" onclick="event.preventDefault(); openImageModal(this);">
-                    <div class="video-placeholder loading" data-image="https://i.postimg.cc/wMrkT1Mw/7713776-D-E956-48-B2-BA09-623-A621-CF43-D.jpg">
-                        <img src="https://i.postimg.cc/wMrkT1Mw/7713776-D-E956-48-B2-BA09-623-A621-CF43-D.jpg" alt="">
-                    </div>
-                </a>
-                
-                <a href="https://t.me/K02_TH" target="_blank" class="submit-button">
-                    Contact Admin
-                </a>
-            </div>
-
-        </section>
-    </div>
-
-    <div id="imageModal" class="modal-overlay">
-        <div class="control-buttons-container">
-            <span class="control-button close-button-float" id="closeButtonFloat">&times;</span> 
-        </div>
-
-        <div class="modal-content">
-            <div class="modal-body">
-                <img id="modalImage" class="modal-image" src="" alt="">
+                <button id="submitVideo" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-rose-200 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-heart text-white animate-pulse"></i> โพสต์อวดแฟนเลย!
+                </button>
             </div>
         </div>
     </div>
-    
-    <footer class="footer-section">
-        &copy; 2024-2025 Knights Of Queen02 | All Rights Reserved
-    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            let scrollPosition = 0; 
+        // --- ฐานข้อมูลเริ่มต้น (ดึงจากไฟล์ในเครื่อง/GitHub) ---
+        const myLoveMoments = [
+            { id: 1, title: "ขอบคุณที่อยู่ด้วยกันนะ", partner: "@แฟนคนเก่ง", cover: "assets/images/moment1.jpg", video: "assets/videos/video1.mp4", tag: "#วันครบรอบ", likes: 250, time: "2 ชม. ที่แล้ว" },
+            { id: 2, title: "เพลงนี้ให้เธอนะ", partner: "@mylove_01", cover: "assets/images/moment2.jpg", video: "assets/videos/video2.mp4", tag: "#รักที่สุด", likes: 124, time: "เมื่อวานนี้" },
+            { id: 3, title: "แค่มีเธอก็พอแล้ว", partner: "@Honey", cover: "assets/images/moment3.jpg", video: "assets/videos/video3.mp4", tag: "#คิดถึง", likes: 89, time: "3 วันที่แล้ว" }
+        ];
 
-            // --- 1. Wavy Text Initialization Logic (เดิม) ---
-            const textElement = document.getElementById('typing-text');
-            const targetText = "Knight Of Queen02"; 
-            
-            function initializeWavyText(text) {
-                textElement.innerHTML = ''; 
-                text.split('').forEach((char, index) => {
-                    const charSpan = document.createElement('span');
-                    charSpan.textContent = char === ' ' ? '\u00A0' : char;
-                    charSpan.classList.add('text-wave-char');
-                    charSpan.style.setProperty('--char-index', index); 
-                    textElement.appendChild(charSpan);
-                });
-            }
-            initializeWavyText(targetText);
-            
-            // --- 2. NEW: Sidebar Menu Functions ---
-            const sidebar = document.getElementById("mySidebar");
-            const body = document.body;
-            
-            function openNav() {
-                // ปิด Modal หากเปิดอยู่
-                if (imageModal.classList.contains('active')) {
-                    closeModal();
-                }
-                
-                sidebar.classList.add('active');
-                body.classList.add('menu-open');
-            }
+        const audioPlaylist = [
+            { title: "ยินดีที่ได้รู้จัก", partner: "@ตัวเล็กของพี่", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3" },
+            { title: "รักเธอเท่าจักรวาล", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3" }
+        ];
 
-            function closeNav() {
-                sidebar.classList.remove('active');
-                body.classList.remove('menu-open');
-            }
-            
-            // 💡 กำหนดให้ฟังก์ชันเข้าถึงได้จากนอก DOMContentLoaded
-            window.openNav = openNav;
-            window.closeNav = closeNav;
+        let currentTrackIndex = 0;
 
+        // --- Elements ---
+        const videoGrid = document.getElementById('videoGrid');
+        const uploadModal = document.getElementById('uploadModal');
+        const modalContainer = document.getElementById('modalContainer');
+        const openBtn = document.getElementById('openUpload');
+        const mobileOpenBtn = document.getElementById('mobileUpload');
+        const closeBtn = document.getElementById('closeUpload');
+        const submitBtn = document.getElementById('submitVideo');
+        
+        const mainAudio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const musicDisks = document.querySelectorAll('.music-disk');
 
-            // --- 3. Modal Logic (ปรับปรุง Scroll) ---
-            const imageModal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const closeButtonFloat = document.getElementById('closeButtonFloat');
-            
-            function closeModal() {
-                imageModal.classList.remove('active');
-                
-                // 💡 กู้คืนตำแหน่งการเลื่อน
-                document.body.classList.remove('modal-open');
-                document.body.style.top = ''; // ลบ offset top ออก
-                window.scrollTo(0, scrollPosition); // เลื่อนกลับไปยังตำแหน่งที่บันทึกไว้
-                
-                setTimeout(() => {
-                    modalImage.src = ''; 
-                }, 300); 
-            }
+        const videoModal = document.getElementById('videoModal');
+        const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+        const videoSource = document.getElementById('videoSource');
+        const closeVideo = document.getElementById('closeVideo');
 
-            window.openImageModal = function(linkElement) {
-                if (!navigator.onLine) {
-                    console.log("Cannot open modal while offline.");
-                    return; 
-                }
-
-                // ปิด Sidebar หากเปิดอยู่
-                if (sidebar.classList.contains('active')) {
-                    closeNav();
-                }
-
-                const placeholder = linkElement.querySelector('.video-placeholder');
-                if (placeholder) {
-                    if (placeholder.classList.contains('loaded')) { 
-                        const imageUrl = placeholder.getAttribute('data-image');
-                        if (imageUrl) {
-                            
-                            // 💡 บันทึกตำแหน่งการเลื่อนก่อนเปิด Modal
-                            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                            
-                            modalImage.src = imageUrl;
-                            imageModal.classList.add('active');
-                            
-                            // 💡 ใช้ Style top เพื่อชดเชยการเลื่อนเมื่อ body เป็น fixed
-                            document.body.style.top = `-${scrollPosition}px`;
-                            document.body.classList.add('modal-open'); 
-                        }
-                    } else {
-                        console.log("Image is still loading, cannot open modal yet.");
-                    }
-                }
-            }
-
-            closeButtonFloat.addEventListener('click', closeModal);
-            
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === "Escape") {
-                    // ปิด Modal ก่อน
-                    if (imageModal.classList.contains('active')) {
-                        closeModal();
-                    } 
-                    // ปิด Sidebar ทีหลัง
-                    else if (sidebar.classList.contains('active')) {
-                        closeNav();
-                    }
-                }
+        // --- Init Functions ---
+        function renderGrid() {
+            videoGrid.innerHTML = '';
+            myLoveMoments.forEach(moment => {
+                const card = document.createElement('div');
+                card.className = "glass-card overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer";
+                card.onclick = () => playVideo(moment.video);
+                card.innerHTML = `
+                    <div class="relative h-48 bg-gray-200">
+                        <img src="${moment.cover}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400'">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                            <i class="fas fa-play text-white text-3xl opacity-0 group-hover:opacity-100 transition-all"></i>
+                        </div>
+                        <span class="absolute top-3 left-3 bg-white/80 backdrop-blur-md text-rose-500 text-[10px] font-bold px-2 py-1 rounded-lg">${moment.tag}</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800">${moment.title}</h4>
+                        <p class="text-xs text-gray-500 mt-1">แท็กถึง: ${moment.partner}</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="flex items-center gap-1 text-rose-500 text-xs">
+                                <i class="fas fa-heart"></i> ${moment.likes}
+                            </div>
+                            <span class="text-[10px] text-gray-400">${moment.time}</span>
+                        </div>
+                    </div>
+                `;
+                videoGrid.appendChild(card);
             });
-            
-            
-            // --- 4. Image Loading State Manager (เดิม) ---
-            function markAsLoaded(placeholder) {
-                placeholder.classList.remove('loading');
-                placeholder.classList.add('loaded');
-            }
-            
-            function handleImageLoading() {
-                if (!navigator.onLine) {
-                    console.log("Skipping image loading. Currently Offline.");
-                    return; 
-                }
+        }
 
-                const images = document.querySelectorAll('.product-card .video-placeholder img');
+        // --- Video Logic ---
+        function playVideo(src) {
+            videoSource.src = src;
+            modalVideoPlayer.load();
+            videoModal.classList.remove('hidden');
+            modalVideoPlayer.play();
+        }
 
-                images.forEach(img => {
-                    const placeholder = img.closest('.video-placeholder');
-                    
-                    placeholder.classList.add('loading');
-                    placeholder.classList.remove('loaded');
-                    
-                    if (img.complete) {
-                        markAsLoaded(placeholder);
-                    } else {
-                        // ใช้ data-image เป็นแหล่งที่มาของรูปภาพ
-                        const dataImage = placeholder.getAttribute('data-image');
-                        if (img.src !== dataImage) {
-                            img.src = dataImage; 
-                        }
-
-                        img.addEventListener('load', () => {
-                            setTimeout(() => {
-                                markAsLoaded(placeholder);
-                            }, 500); 
-                        }, { once: true });
-
-                        img.addEventListener('error', () => {
-                            console.error('Failed to load image:', img.src);
-                        }, { once: true });
-                    }
-                });
-            }
-            
-            // --- 5. Real-time Internet Check Logic (เดิม) ---
-            function updateConnectionStatus() {
-                if (navigator.onLine) {
-                    document.body.classList.remove('internet-offline');
-                    console.log("Internet: Online. Retrying image loading...");
-                    handleImageLoading(); 
-                } else {
-                    document.body.classList.add('internet-offline');
-                    console.log("Internet: Offline. Images revert to Loading state.");
-                    // ปิด Modal และ Sidebar เมื่อออฟไลน์
-                    if (imageModal.classList.contains('active')) {
-                        closeModal();
-                    }
-                    if (sidebar.classList.contains('active')) {
-                        closeNav();
-                    }
-                }
-            }
-
-            updateConnectionStatus();
-            window.addEventListener('online', updateConnectionStatus);
-            window.addEventListener('offline', updateConnectionStatus);
-
+        closeVideo.addEventListener('click', () => {
+            videoModal.classList.add('hidden');
+            modalVideoPlayer.pause();
         });
+
+        // --- Audio Logic ---
+        function togglePlay() {
+            if (mainAudio.paused) {
+                mainAudio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                musicDisks.forEach(d => d.classList.remove('paused'));
+            } else {
+                mainAudio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                musicDisks.forEach(d => d.classList.add('paused'));
+            }
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        function loadTrack(index) {
+            const track = audioPlaylist[index];
+            document.getElementById('currentTitle').textContent = track.title;
+            document.getElementById('currentPartner').innerHTML = `แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> ${track.partner}`;
+            document.getElementById('currentCover').src = track.cover;
+            mainAudio.src = track.file;
+            if (!mainAudio.paused) mainAudio.play();
+        }
+
+        document.getElementById('nextTrack').addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            mainAudio.play();
+            playIcon.classList.remove('fa-play', 'fa-pause');
+            playIcon.classList.add('fa-pause');
+            musicDisks.forEach(d => d.classList.remove('paused'));
+        });
+
+        document.getElementById('prevTrack').addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex - 1 + audioPlaylist.length) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            mainAudio.play();
+            playIcon.classList.remove('fa-play', 'fa-pause');
+            playIcon.classList.add('fa-pause');
+            musicDisks.forEach(d => d.classList.remove('paused'));
+        });
+
+        // Toggle Modal
+        function toggleModal(show) {
+            if (show) {
+                uploadModal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContainer.classList.remove('scale-95');
+                    modalContainer.classList.add('scale-100');
+                }, 10);
+            } else {
+                modalContainer.classList.remove('scale-100');
+                modalContainer.classList.add('scale-95');
+                setTimeout(() => {
+                    uploadModal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        openBtn.addEventListener('click', () => toggleModal(true));
+        mobileOpenBtn.addEventListener('click', () => toggleModal(true));
+        closeBtn.addEventListener('click', () => toggleModal(false));
+
+        // Close on backdrop click
+        uploadModal.addEventListener('click', (e) => {
+            if (e.target === uploadModal) toggleModal(false);
+        });
+
+        // Cover Selection
+        function selectCover(el) {
+            document.querySelectorAll('.cover-option').forEach(opt => opt.classList.remove('ring-4'));
+            el.classList.add('ring-4');
+            // Update preview
+            const src = el.querySelector('img').src;
+            document.getElementById('currentCover').src = src;
+        }
+
+        // Simulate Submission (Using local files)
+        submitBtn.addEventListener('click', () => {
+            const title = document.getElementById('inputTitle').value || "เพลงรักเพลงใหม่";
+            const partner = document.getElementById('inputPartner').value || "@คนสวยขา";
+            const videoFileName = document.getElementById('inputVideoFile').value || "video1.mp4";
+            const currentCoverSrc = document.getElementById('currentCover').src;
+
+            const newMoment = {
+                id: Date.now(),
+                title: title,
+                partner: partner,
+                cover: currentCoverSrc,
+                video: `assets/videos/${videoFileName}`,
+                tag: "#เพิ่งลง",
+                likes: 0,
+                time: "เมื่อสักครู่"
+            };
+            
+            myLoveMoments.unshift(newMoment);
+            renderGrid();
+            toggleModal(false);
+
+            // Update Player as well
+            document.getElementById('currentTitle').textContent = title;
+            document.getElementById('currentPartner').innerHTML = `แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> ${partner}`;
+
+            // Toast effect
+            const toast = document.createElement('div');
+            toast.className = "fixed top-5 left-1/2 -translate-x-1/2 bg-white px-6 py-3 rounded-2xl shadow-xl z-[100] border-2 border-rose-300 font-bold text-rose-500 animate-bounce";
+            toast.textContent = "เย้! อวดแฟนสำเร็จแล้ว ❤️";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        });
+
+        // Run on load
+        window.onload = () => {
+            renderGrid();
+        };
     </script>
 </body>
 </html>
