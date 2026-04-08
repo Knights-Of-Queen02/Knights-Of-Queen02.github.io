@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>พื้นที่ของคนน่ารัก</title>
+    <title>พื้นที่ของคนน่ารัก?</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,6 +48,13 @@
             height: 100%;
         }
     </style>
+    <script>
+        // บังคับให้เบราว์เซอร์ไม่จดจำตำแหน่งการเลื่อนเดิม (ป้องกันการเข้าเว็บแล้วเด้งลงข้างล่าง)
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+    </script>
 </head>
 <body class="pb-10 lg:pb-0">
 
@@ -402,10 +409,15 @@
 
         // Run on load
         window.onload = () => {
-            // บังคับให้ Scroll กลับไปที่ด้านบนสุดเสมอเมื่อโหลดหน้าเว็บ
+            // บังคับ Scroll ขึ้นบนทันทีที่โหลดเสร็จ
             window.scrollTo(0, 0);
             renderGrid();
         };
+
+        // สำหรับอุปกรณ์พกพาที่แอปอาจจะ Resume กลับมา
+        window.addEventListener('pageshow', (event) => {
+            window.scrollTo(0, 0);
+        });
     </script>
 </body>
 </html>
