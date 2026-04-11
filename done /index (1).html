@@ -327,16 +327,6 @@
 
         // --- Audio Logic ---
         function togglePlay() {
-            // แก้ไข: ถ้าเพลงจบแล้ว ให้เริ่มเล่นใหม่ตั้งแต่ต้น
-            if (mainAudio.ended) {
-                mainAudio.currentTime = 0;
-                mainAudio.play();
-                playIcon.classList.remove('fa-play');
-                playIcon.classList.add('fa-pause');
-                musicDisks.forEach(d => d.classList.remove('paused'));
-                return;
-            }
-
             if (mainAudio.paused) {
                 mainAudio.play();
                 playIcon.classList.remove('fa-play');
@@ -351,13 +341,6 @@
         }
 
         playBtn.addEventListener('click', togglePlay);
-
-        // แก้ไข: ใช้ Event Listener แบบแม่นยำเพื่อให้หน้าปกหยุดและปุ่มเด้งกลับเมื่อจบจริงๆ
-        mainAudio.addEventListener('ended', () => {
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            musicDisks.forEach(d => d.classList.add('paused'));
-        });
 
         function loadTrack(index) {
             const track = audioPlaylist[index];
