@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>หน้าแรก</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&family=Itim&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Itim', cursive, 'Prompt', sans-serif;
+            font-family: 'Prompt', sans-serif;
             background: linear-gradient(135deg, #fce4ec 0%, #fff1f2 100%);
             min-height: 100vh;
         }
@@ -46,40 +46,6 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-        }
-
-        /* Typewriter Effect with Loop (Typing & Deleting) */
-        .typewriter {
-            overflow: hidden;
-            border-right: .15em solid #f43f5e;
-            white-space: nowrap;
-            margin: 0;
-            letter-spacing: .05em;
-            animation: 
-                typing-loop 6s steps(30, end) infinite,
-                blink-caret .75s step-end infinite;
-            width: fit-content;
-        }
-
-        @keyframes typing-loop {
-            0%, 10% { width: 0; }
-            45%, 55% { width: 100%; }
-            90%, 100% { width: 0; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #f43f5e; }
-        }
-
-        /* ใช้ฟอนต์น่ารักกับข้อความ แต่ไม่ยุ่งกับไอคอน */
-        h1, h2, h3, h4, p, span, a, input, button:not(.fas):not(.far):not(.fab) {
-            font-family: 'Itim', cursive !important;
-        }
-        
-        /* ป้องกันไอคอนบัค */
-        .fas, .far, .fab {
-            font-family: "Font Awesome 6 Free" !important;
         }
     </style>
     <script>
@@ -128,7 +94,7 @@
         <!-- Header -->
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800 typewriter">พื้นที่ของคนอกหัก.</h1>
+                <h1 class="text-2xl font-bold text-gray-800">พื้นที่ของคนอกหัก.</h1>
                 <p class="text-gray-500 text-sm">Design by <a href="https://m.me/the.genesis.dev" target="_blank" class="text-rose-500 hover:underline">Athena</a></p>
             </div>
             <div class="flex items-center gap-3">
