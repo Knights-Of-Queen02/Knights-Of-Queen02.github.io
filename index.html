@@ -81,19 +81,6 @@
         .fas, .far, .fab {
             font-family: "Font Awesome 6 Free" !important;
         }
-
-        /* ส่วนหัวที่ติดอยู่กับที่ (Sticky Header) */
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background: rgba(252, 228, 236, 0.8);
-            backdrop-filter: blur(12px);
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(244, 63, 94, 0.1);
-        }
     </style>
     <script>
         // บังคับให้เบราว์เซอร์ไม่จดจำตำแหน่งการเลื่อนเดิม (ป้องกันการเข้าเว็บแล้วเด้งลงข้างล่าง)
@@ -138,8 +125,8 @@
     <!-- Main Content -->
     <main class="lg:ml-64 p-4 lg:p-8">
         
-        <!-- Header (Fixed/Sticky version) -->
-        <header class="sticky-header flex justify-between items-center px-2">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800 typewriter">พื้นที่ของคนอกหัก.</h1>
                 <p class="text-gray-500 text-sm">Design by <a href="https://m.me/the.genesis.dev" target="_blank" class="text-rose-500 hover:underline">Athena</a></p>
@@ -204,9 +191,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Dummy Content to enable scrolling -->
-        <div class="h-[1000px]"></div>
 
         <!-- Hidden Video Grid (Removed Latest Moments section as requested) -->
         <section id="videoGrid" class="hidden"></section>
