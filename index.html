@@ -143,7 +143,19 @@
 
         <!-- Featured Video (Music Player Style) -->
         <section class="mb-10">
-            <h2 class="text-lg font-bold text-gray-700 mb-4 px-2">เพลงที่โพสต์ล่าสุด</h2>
+            <div class="flex justify-between items-end mb-4 px-2">
+                <h2 class="text-lg font-bold text-gray-700">เพลงที่โพสต์ล่าสุด</h2>
+                <!-- Visitor Counter with Now Playing UI -->
+                <div class="flex items-center gap-2">
+                    <span class="bg-rose-100 text-rose-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest flex items-center gap-1.5">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                        </span>
+                        Visitors: <span id="visitorCountDisplay">1,000</span>
+                    </span>
+                </div>
+            </div>
             <div class="relative overflow-hidden glass-card p-6 flex flex-col md:flex-row items-center gap-8 border-rose-200 border">
                 <div class="relative z-10 w-48 h-48 flex-shrink-0">
                     <div class="music-disk paused absolute inset-0 bg-black rounded-full shadow-2xl flex items-center justify-center">
@@ -157,7 +169,9 @@
                 </div>
                 <div class="flex-1 text-center md:text-left">
                     <span class="bg-rose-100 text-rose-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Now Playing</span>
-                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-1">Cupid</h3>
+                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-0">ฉันคือนักสะสมความเศร้า</h3>
+                    <!-- เพิ่มชื่อศิลปิน -->
+                    <p id="currentArtist" class="text-gray-400 text-sm mb-2">ศิลปิน: เรนิษรา</p>
                     
                     <!-- ส่วนแท็กแฟน ปรับให้กดเด้งไป IG -->
                     <p id="currentPartner" class="text-rose-400 font-medium mb-6">
@@ -236,6 +250,10 @@
                         <input id="inputTitle" type="text" placeholder="เช่น ยินดีที่ได้รู้จัก" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
                     </div>
                     <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อศิลปิน</label>
+                        <input id="inputArtist" type="text" placeholder="เช่น Bodyslam" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
+                    </div>
+                    <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อคนสำคัญ (แท็กแฟน)</label>
                         <input id="inputPartner" type="text" placeholder="@ชื่อแฟน" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
                     </div>
@@ -249,16 +267,58 @@
     </div>
 
     <script>
+        // --- ระบบนับจำนวนผู้เข้าชม (Visitor Counter Logic) ---
+        function initVisitorCounter() {
+            let baseViews = 1000;
+            const startTimeKey = 'loveplayer_visit_start_time';
+            let startTime = localStorage.getItem(startTimeKey);
+            
+            if (!startTime) {
+                startTime = Date.now();
+                localStorage.setItem(startTimeKey, startTime);
+            }
+
+            const updateDisplay = () => {
+                const now = Date.now();
+                const msPassed = now - startTime;
+                const hoursPassed = msPassed / (1000 * 60 * 60);
+                
+                // คำนวณจำนวนที่เพิ่มขึ้น (10-20 ต่อชั่วโมง)
+                let totalAdded = 0;
+                const seedValue = parseInt(startTime.toString().slice(-4));
+                
+                // สุ่มแบบคงที่ตามจำนวนชั่วโมงที่ผ่านไป
+                for(let i = 0; i < Math.floor(hoursPassed); i++) {
+                    const hourlyRandom = ((seedValue + i) % 11) + 10; 
+                    totalAdded += hourlyRandom;
+                }
+
+                // สุ่มเพิ่มส่วนของชั่วโมงปัจจุบัน
+                const currentHourProgress = hoursPassed % 1;
+                const currentHourRate = ((seedValue + Math.floor(hoursPassed)) % 11) + 10;
+                totalAdded += Math.floor(currentHourProgress * currentHourRate);
+
+                const finalCount = baseViews + totalAdded;
+                const displayElement = document.getElementById('visitorCountDisplay');
+                if (displayElement) {
+                    displayElement.textContent = finalCount.toLocaleString();
+                }
+            };
+
+            updateDisplay();
+            setInterval(updateDisplay, 10000); // อัปเดตทุก 10 วินาทีเพื่อให้ดู Real-time
+        }
+
         // --- ฐานข้อมูลเริ่มต้น (ดึงจากไฟล์ในเครื่อง/GitHub) ---
         const myLoveMoments = [
-            { id: 1, title: "ขอบคุณที่อยู่ด้วยกันนะ", partner: "@แฟนคนเก่ง", cover: "assets/images/moment1.jpg", video: "assets/videos/video1.mp4", tag: "#วันครบรอบ", likes: 250, time: "2 ชม. ที่แล้ว" },
-            { id: 2, title: "เพลงนี้ให้เธอนะ", partner: "@mylove_01", cover: "assets/images/moment2.jpg", video: "assets/videos/video2.mp4", tag: "#รักที่สุด", likes: 124, time: "เมื่อวานนี้" },
-            { id: 3, title: "แค่มีเธอก็พอแล้ว", partner: "@Honey", cover: "assets/images/moment3.jpg", video: "assets/videos/video3.mp4", tag: "#คิดถึง", likes: 89, time: "3 วันที่แล้ว" }
+            { id: 1, title: "ขอบคุณที่อยู่ด้วยกันนะ", artist: "Unknown", partner: "@แฟนคนเก่ง", cover: "assets/images/moment1.jpg", video: "assets/videos/video1.mp4", tag: "#วันครบรอบ", likes: 250, time: "2 ชม. ที่แล้ว" },
+            { id: 2, title: "เพลงนี้ให้เธอนะ", artist: "Unknown", partner: "@mylove_01", cover: "assets/images/moment2.jpg", video: "assets/videos/video2.mp4", tag: "#รักที่สุด", likes: 124, time: "เมื่อวานนี้" },
+            { id: 3, title: "แค่มีเธอก็พอแล้ว", artist: "Unknown", partner: "@Honey", cover: "assets/images/moment3.jpg", video: "assets/videos/video3.mp4", tag: "#คิดถึง", likes: 89, time: "3 วันที่แล้ว" }
         ];
 
         const audioPlaylist = [
-            { title: "Cupid", partner: "@ตัวเอง", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3", ig: "https://m.me/the.genesis.dev" },
-            { title: "รักเธอเท่าจักรวาล", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3", ig: "https://www.instagram.com/your_girlfriend_ig/" }
+            { title: "ฉันคือนักสะสมความเศร้า", artist: "อพาร์ตเมนต์คุณป้า", partner: "@ตัวเอง", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3", ig: "https://m.me/the.genesis.dev" },
+            { title: "รักเธอเท่าจักรวาล", artist: "วงเขียนไขและวานิช", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3", ig: "https://www.instagram.com/your_girlfriend_ig/" }
         ];
 
         let currentTrackIndex = 0;
@@ -299,6 +359,7 @@
                     </div>
                     <div class="p-4">
                         <h4 class="font-bold text-gray-800">${moment.title}</h4>
+                        <p class="text-xs text-gray-400">ศิลปิน: ${moment.artist}</p>
                         <p class="text-xs text-gray-500 mt-1">แท็กถึง: ${moment.partner}</p>
                         <div class="flex items-center justify-between mt-4">
                             <div class="flex items-center gap-1 text-rose-500 text-xs">
@@ -362,6 +423,7 @@
         function loadTrack(index) {
             const track = audioPlaylist[index];
             document.getElementById('currentTitle').textContent = track.title;
+            document.getElementById('currentArtist').textContent = `ศิลปิน: ${track.artist}`;
             // แก้ไข link IG ของแฟน
             const fanLink = document.getElementById('fanLink');
             fanLink.textContent = track.partner;
@@ -427,6 +489,7 @@
         // Simulate Submission (Using local files)
         submitBtn.addEventListener('click', () => {
             const title = document.getElementById('inputTitle').value || "เพลงรักเพลงใหม่";
+            const artist = document.getElementById('inputArtist').value || "Unknown Artist";
             const partner = document.getElementById('inputPartner').value || "@คนสวยขา";
             const videoFileName = document.getElementById('inputVideoFile').value || "video1.mp4";
             const currentCoverSrc = document.getElementById('currentCover').src;
@@ -434,6 +497,7 @@
             const newMoment = {
                 id: Date.now(),
                 title: title,
+                artist: artist,
                 partner: partner,
                 cover: currentCoverSrc,
                 video: `assets/videos/${videoFileName}`,
@@ -448,6 +512,7 @@
 
             // Update Player as well
             document.getElementById('currentTitle').textContent = title;
+            document.getElementById('currentArtist').textContent = `ศิลปิน: ${artist}`;
             document.getElementById('fanLink').textContent = partner;
 
             // Toast effect
@@ -463,6 +528,7 @@
             // บังคับ Scroll ขึ้นบนทันทีที่โหลดเสร็จ
             window.scrollTo(0, 0);
             renderGrid();
+            initVisitorCounter(); // เริ่มระบบนับจำนวนผู้เข้าชม
         };
 
         // สำหรับอุปกรณ์พกพาที่แอปอาจจะ Resume กลับมา

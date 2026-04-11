@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าแรก</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:wght@300;400;600&family=Itim&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Itim', cursive, 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #fff1f2 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+        }
+        .music-disk {
+            animation: rotate 10s linear infinite;
+        }
+        .music-disk.paused {
+            animation-play-state: paused;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 10px;
+        }
+        /* ปรับให้ไอคอนอยู่กึ่งกลางเป๊ะ */
+        #playBtn i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Typewriter Effect with Loop (Typing & Deleting) */
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #f43f5e;
+            white-space: nowrap;
+            margin: 0;
+            letter-spacing: .05em;
+            animation: 
+                typing-loop 6s steps(30, end) infinite,
+                blink-caret .75s step-end infinite;
+            width: fit-content;
+        }
+
+        @keyframes typing-loop {
+            0%, 10% { width: 0; }
+            45%, 55% { width: 100%; }
+            90%, 100% { width: 0; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #f43f5e; }
+        }
+
+        /* ใช้ฟอนต์น่ารักกับข้อความ แต่ไม่ยุ่งกับไอคอน */
+        h1, h2, h3, h4, p, span, a, input, button:not(.fas):not(.far):not(.fab) {
+            font-family: 'Itim', cursive !important;
+        }
+        
+        /* ป้องกันไอคอนบัค */
+        .fas, .far, .fab {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+    </style>
+    <script>
+        // บังคับให้เบราว์เซอร์ไม่จดจำตำแหน่งการเลื่อนเดิม (ป้องกันการเข้าเว็บแล้วเด้งลงข้างล่าง)
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+    </script>
+</head>
+<body class="pb-10 lg:pb-0">
+
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-white/50 backdrop-blur-md border-r border-rose-100 flex-col p-6 z-50">
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <div class="w-10 h-10 bg-rose-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-rose-200">
+                <i class="fas fa-heart text-lg"></i>
+            </div>
+            <span class="text-xl font-bold text-rose-600">LovePlayer</span>
+        </div>
+        
+        <nav class="space-y-4 flex-1">
+            <a href="#" class="flex items-center gap-4 p-3 bg-rose-500 text-white rounded-2xl shadow-md transition-all">
+                <i class="fas fa-home w-5"></i> หน้าหลัก
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-music w-5"></i> คลังเพลงรัก
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-user-friends w-5"></i> แท็กแฟน
+            </a>
+            <a href="#" class="flex items-center gap-4 p-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 rounded-2xl transition-all">
+                <i class="fas fa-cog w-5"></i> ตั้งค่า
+            </a>
+        </nav>
+
+        <div class="glass-card p-4 text-center mt-auto">
+            <p class="text-xs text-rose-400 font-medium">ฉลองครบรอบ</p>
+            <p class="text-lg font-bold text-rose-600">365 วัน</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-64 p-4 lg:p-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 typewriter">พื้นที่ของคนอกหัก.</h1>
+                <p class="text-gray-500 text-sm">Design by <a href="https://m.me/the.genesis.dev" target="_blank" class="text-rose-500 hover:underline">Athena</a></p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="openUpload" class="hidden md:flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-rose-200 transition-all font-medium">
+                    <i class="fas fa-plus"></i> ลงวิดีโอเพลง
+                </button>
+                <a href="https://m.me/the.genesis.dev" target="_blank" class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden block">
+                    <img src="assets/images/profile.jpg" alt="Profile" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'">
+                </a>
+            </div>
+        </header>
+
+        <!-- Featured Video (Music Player Style) -->
+        <section class="mb-10">
+            <h2 class="text-lg font-bold text-gray-700 mb-4 px-2">เพลงที่โพสต์ล่าสุด</h2>
+            <div class="relative overflow-hidden glass-card p-6 flex flex-col md:flex-row items-center gap-8 border-rose-200 border">
+                <div class="relative z-10 w-48 h-48 flex-shrink-0">
+                    <div class="music-disk paused absolute inset-0 bg-black rounded-full shadow-2xl flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 rounded-full backdrop-blur-md"></div>
+                    </div>
+                    <!-- เปลี่ยน src เป็นไฟล์จากโฟลเดอร์ assets/images/cover.jpg -->
+                    <img id="currentCover" src="assets/images/default-cover.jpg" alt="Cover" class="music-disk paused absolute inset-0 w-full h-full object-cover rounded-full border-4 border-white shadow-xl opacity-80" onerror="this.src='https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&q=80&w=400'">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-4 h-4 bg-white rounded-full z-20 shadow-inner"></div>
+                    </div>
+                </div>
+                <div class="flex-1 text-center md:text-left">
+                    <span class="bg-rose-100 text-rose-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Now Playing</span>
+                    <h3 id="currentTitle" class="text-3xl font-bold text-gray-800 mt-2 mb-1">ฉันคือนักสะสมความเศร้า</h3>
+                    
+                    <!-- ส่วนแท็กแฟน ปรับให้กดเด้งไป IG -->
+                    <p id="currentPartner" class="text-rose-400 font-medium mb-6">
+                        แท็กถึง: <i class="fas fa-heart mx-1 text-xs"></i> 
+                        <a href="https://m.me/the.genesis.dev" target="_blank" id="fanLink" class="hover:underline">@ตัวเอง</a>
+                    </p>
+
+                    <div class="flex items-center justify-center md:justify-start gap-4">
+                        <button id="prevTrack" disabled style="opacity: 0.4; cursor: not-allowed;" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all"><i class="fas fa-backward"></i></button>
+                        <button id="playBtn" class="w-16 h-16 flex items-center justify-center bg-rose-500 text-white rounded-full shadow-lg shadow-rose-200 transition-all text-xl">
+                            <i class="fas fa-play" id="playIcon"></i>
+                        </button>
+                        <button id="nextTrack" disabled style="opacity: 0.4; cursor: not-allowed;" class="w-12 h-12 flex items-center justify-center bg-white text-rose-500 rounded-full shadow-md transition-all"><i class="fas fa-forward"></i></button>
+                    </div>
+                    <!-- Hidden Audio Player -->
+                    <audio id="mainAudio" src="assets/music/song1.mp3"></audio>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden Video Grid (Removed Latest Moments section as requested) -->
+        <section id="videoGrid" class="hidden"></section>
+
+    </main>
+
+    <!-- Video Preview Modal (New for local video playback) -->
+    <div id="videoModal" class="fixed inset-0 bg-black/90 z-[70] hidden flex items-center justify-center p-4">
+        <button id="closeVideo" class="absolute top-6 right-6 text-white text-3xl"><i class="fas fa-times"></i></button>
+        <video id="modalVideoPlayer" controls class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl">
+            <source id="videoSource" src="" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="glass-card bg-white w-full max-w-lg overflow-hidden shadow-2xl scale-95 transition-transform duration-300" id="modalContainer">
+            <div class="p-6 border-b border-rose-50 flex justify-between items-center bg-rose-50/50">
+                <h3 class="text-lg font-bold text-gray-800 italic"><i class="fas fa-music text-rose-500 mr-2"></i>ลงเพลงอวดแฟน</h3>
+                <button id="closeUpload" class="text-gray-400 hover:text-rose-500 transition-colors"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-5 overflow-y-auto max-h-[80vh] custom-scrollbar">
+                <!-- Cover Selection -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">เลือกปกเพลงสวยๆ</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-4 ring-rose-400">
+                            <img src="assets/images/cover1.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-0 ring-rose-400">
+                            <img src="assets/images/cover2.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button onclick="selectCover(this)" class="cover-option relative rounded-xl overflow-hidden aspect-square ring-0 ring-rose-400">
+                            <img src="assets/images/cover3.jpg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=200'">
+                        </button>
+                        <button class="bg-gray-100 rounded-xl flex flex-col items-center justify-center text-gray-400 text-xs gap-1 border-2 border-dashed border-gray-200">
+                            <i class="fas fa-image"></i>
+                            ดึงจากไฟล์
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video Input -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อไฟล์วิดีโอ (เตรียมไว้ใน assets/videos/)</label>
+                    <div class="relative">
+                        <i class="fas fa-file-video absolute left-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <input id="inputVideoFile" type="text" placeholder="เช่น video1.mp4" class="w-full bg-gray-50 border-none rounded-2xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-rose-300 outline-none transition-all text-sm">
+                    </div>
+                </div>
+
+                <!-- Song Info -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อเพลง</label>
+                        <input id="inputTitle" type="text" placeholder="เช่น ยินดีที่ได้รู้จัก" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อคนสำคัญ (แท็กแฟน)</label>
+                        <input id="inputPartner" type="text" placeholder="@ชื่อแฟน" class="w-full bg-gray-50 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-rose-300 outline-none text-sm">
+                    </div>
+                </div>
+
+                <button id="submitVideo" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-rose-200 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-heart text-white animate-pulse"></i> โพสต์อวดแฟนเลย!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ฐานข้อมูลเริ่มต้น (ดึงจากไฟล์ในเครื่อง/GitHub) ---
+        const myLoveMoments = [
+            { id: 1, title: "ขอบคุณที่อยู่ด้วยกันนะ", partner: "@แฟนคนเก่ง", cover: "assets/images/moment1.jpg", video: "assets/videos/video1.mp4", tag: "#วันครบรอบ", likes: 250, time: "2 ชม. ที่แล้ว" },
+            { id: 2, title: "เพลงนี้ให้เธอนะ", partner: "@mylove_01", cover: "assets/images/moment2.jpg", video: "assets/videos/video2.mp4", tag: "#รักที่สุด", likes: 124, time: "เมื่อวานนี้" },
+            { id: 3, title: "แค่มีเธอก็พอแล้ว", partner: "@Honey", cover: "assets/images/moment3.jpg", video: "assets/videos/video3.mp4", tag: "#คิดถึง", likes: 89, time: "3 วันที่แล้ว" }
+        ];
+
+        const audioPlaylist = [
+            { title: "ฉันคือนักสะสมความเศร้า", partner: "@ตัวเอง", cover: "assets/images/default-cover.jpg", file: "assets/music/song1.mp3", ig: "https://m.me/the.genesis.dev" },
+            { title: "รักเธอเท่าจักรวาล", partner: "@MyLove", cover: "assets/images/cover2.jpg", file: "assets/music/song2.mp3", ig: "https://www.instagram.com/your_girlfriend_ig/" }
+        ];
+
+        let currentTrackIndex = 0;
+
+        // --- Elements ---
+        const videoGrid = document.getElementById('videoGrid');
+        const uploadModal = document.getElementById('uploadModal');
+        const modalContainer = document.getElementById('modalContainer');
+        const openBtn = document.getElementById('openUpload');
+        const closeBtn = document.getElementById('closeUpload');
+        const submitBtn = document.getElementById('submitVideo');
+        
+        const mainAudio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const musicDisks = document.querySelectorAll('.music-disk');
+
+        const videoModal = document.getElementById('videoModal');
+        const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+        const videoSource = document.getElementById('videoSource');
+        const closeVideo = document.getElementById('closeVideo');
+
+        // --- Init Functions ---
+        function renderGrid() {
+            if(!videoGrid) return;
+            videoGrid.innerHTML = '';
+            myLoveMoments.forEach(moment => {
+                const card = document.createElement('div');
+                card.className = "glass-card overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer";
+                card.onclick = () => playVideo(moment.video);
+                card.innerHTML = `
+                    <div class="relative h-48 bg-gray-200">
+                        <img src="${moment.cover}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400'">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                            <i class="fas fa-play text-white text-3xl opacity-0 group-hover:opacity-100 transition-all"></i>
+                        </div>
+                        <span class="absolute top-3 left-3 bg-white/80 backdrop-blur-md text-rose-500 text-[10px] font-bold px-2 py-1 rounded-lg">${moment.tag}</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800">${moment.title}</h4>
+                        <p class="text-xs text-gray-500 mt-1">แท็กถึง: ${moment.partner}</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="flex items-center gap-1 text-rose-500 text-xs">
+                                <i class="fas fa-heart"></i> ${moment.likes}
+                            </div>
+                            <span class="text-[10px] text-gray-400">${moment.time}</span>
+                        </div>
+                    </div>
+                `;
+                videoGrid.appendChild(card);
+            });
+        }
+
+        // --- Video Logic ---
+        function playVideo(src) {
+            videoSource.src = src;
+            modalVideoPlayer.load();
+            videoModal.classList.remove('hidden');
+            modalVideoPlayer.play();
+        }
+
+        closeVideo.addEventListener('click', () => {
+            videoModal.classList.add('hidden');
+            modalVideoPlayer.pause();
+        });
+
+        // --- Audio Logic ---
+        function togglePlay() {
+            // แก้ไข: ถ้าเพลงจบแล้ว ให้เริ่มเล่นใหม่ตั้งแต่ต้น
+            if (mainAudio.ended) {
+                mainAudio.currentTime = 0;
+                mainAudio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                musicDisks.forEach(d => d.classList.remove('paused'));
+                return;
+            }
+
+            if (mainAudio.paused) {
+                mainAudio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                musicDisks.forEach(d => d.classList.remove('paused'));
+            } else {
+                mainAudio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                musicDisks.forEach(d => d.classList.add('paused'));
+            }
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        // แก้ไข: ใช้ Event Listener แบบแม่นยำเพื่อให้หน้าปกหยุดและปุ่มเด้งกลับเมื่อจบจริงๆ
+        mainAudio.addEventListener('ended', () => {
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            musicDisks.forEach(d => d.classList.add('paused'));
+        });
+
+        function loadTrack(index) {
+            const track = audioPlaylist[index];
+            document.getElementById('currentTitle').textContent = track.title;
+            // แก้ไข link IG ของแฟน
+            const fanLink = document.getElementById('fanLink');
+            fanLink.textContent = track.partner;
+            if(track.ig) fanLink.href = track.ig;
+            
+            document.getElementById('currentCover').src = track.cover;
+            mainAudio.src = track.file;
+            if (!mainAudio.paused) mainAudio.play();
+        }
+
+        document.getElementById('nextTrack').addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            mainAudio.play();
+            playIcon.classList.remove('fa-play', 'fa-pause');
+            playIcon.classList.add('fa-pause');
+            musicDisks.forEach(d => d.classList.remove('paused'));
+        });
+
+        document.getElementById('prevTrack').addEventListener('click', () => {
+            currentTrackIndex = (currentTrackIndex - 1 + audioPlaylist.length) % audioPlaylist.length;
+            loadTrack(currentTrackIndex);
+            mainAudio.play();
+            playIcon.classList.remove('fa-play', 'fa-pause');
+            playIcon.classList.add('fa-pause');
+            musicDisks.forEach(d => d.classList.remove('paused'));
+        });
+
+        // Toggle Modal
+        function toggleModal(show) {
+            if (show) {
+                uploadModal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContainer.classList.remove('scale-95');
+                    modalContainer.classList.add('scale-100');
+                }, 10);
+            } else {
+                modalContainer.classList.remove('scale-100');
+                modalContainer.classList.add('scale-95');
+                setTimeout(() => {
+                    uploadModal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        openBtn.addEventListener('click', () => toggleModal(true));
+        closeBtn.addEventListener('click', () => toggleModal(false));
+
+        // Close on backdrop click
+        uploadModal.addEventListener('click', (e) => {
+            if (e.target === uploadModal) toggleModal(false);
+        });
+
+        // Cover Selection
+        function selectCover(el) {
+            document.querySelectorAll('.cover-option').forEach(opt => opt.classList.remove('ring-4'));
+            el.classList.add('ring-4');
+            // Update preview
+            const src = el.querySelector('img').src;
+            document.getElementById('currentCover').src = src;
+        }
+
+        // Simulate Submission (Using local files)
+        submitBtn.addEventListener('click', () => {
+            const title = document.getElementById('inputTitle').value || "เพลงรักเพลงใหม่";
+            const partner = document.getElementById('inputPartner').value || "@คนสวยขา";
+            const videoFileName = document.getElementById('inputVideoFile').value || "video1.mp4";
+            const currentCoverSrc = document.getElementById('currentCover').src;
+
+            const newMoment = {
+                id: Date.now(),
+                title: title,
+                partner: partner,
+                cover: currentCoverSrc,
+                video: `assets/videos/${videoFileName}`,
+                tag: "#เพิ่งลง",
+                likes: 0,
+                time: "เมื่อสักครู่"
+            };
+            
+            myLoveMoments.unshift(newMoment);
+            renderGrid();
+            toggleModal(false);
+
+            // Update Player as well
+            document.getElementById('currentTitle').textContent = title;
+            document.getElementById('fanLink').textContent = partner;
+
+            // Toast effect
+            const toast = document.createElement('div');
+            toast.className = "fixed top-5 left-1/2 -translate-x-1/2 bg-white px-6 py-3 rounded-2xl shadow-xl z-[100] border-2 border-rose-300 font-bold text-rose-500 animate-bounce";
+            toast.textContent = "เย้! อวดแฟนสำเร็จแล้ว ❤️";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        });
+
+        // Run on load
+        window.onload = () => {
+            // บังคับ Scroll ขึ้นบนทันทีที่โหลดเสร็จ
+            window.scrollTo(0, 0);
+            renderGrid();
+        };
+
+        // สำหรับอุปกรณ์พกพาที่แอปอาจจะ Resume กลับมา
+        window.addEventListener('pageshow', (event) => {
+            window.scrollTo(0, 0);
+        });
+    </script>
+</body>
+</html>
